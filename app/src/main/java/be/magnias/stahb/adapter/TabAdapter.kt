@@ -3,13 +3,12 @@ package be.magnias.stahb.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import be.magnias.stahb.R
-import be.magnias.stahb.data.Tab
+import be.magnias.stahb.model.Tab
 import kotlinx.android.synthetic.main.tab_item.view.*
 
 

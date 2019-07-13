@@ -1,11 +1,19 @@
-package be.magnias.stahb.data
+package be.magnias.stahb.model.database
 
 import android.app.Application
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
+import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.TabDao
+import be.magnias.stahb.network.StahbApi
+import javax.inject.Inject
 
 class TabRepository(application: Application)
 {
+
+    @Inject
+    lateinit var stahbApi: StahbApi
+
     private var tabDao: TabDao
 
     private var allTabs: LiveData<List<Tab>>

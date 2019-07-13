@@ -1,4 +1,4 @@
-package be.magnias.stahb.data
+package be.magnias.stahb.model
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

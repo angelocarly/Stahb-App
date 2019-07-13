@@ -1,4 +1,4 @@
-package be.magnias.stahb.data
+package be.magnias.stahb.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
