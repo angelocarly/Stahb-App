@@ -1,18 +1,13 @@
 package be.magnias.stahb.ui
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.model.database.TabRepository
 import be.magnias.stahb.network.StahbApi
+import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.logging.Logger
+import java.util.*
 import javax.inject.Inject
 
 class TabViewModel : BaseViewModel()
@@ -24,6 +19,11 @@ class TabViewModel : BaseViewModel()
     private lateinit var subscription: Disposable
 
     private var allTabs: MutableLiveData<List<Tab>> = MutableLiveData<List<Tab>>()
+
+    /**
+     * Indicates whether the loading view should be displayed.
+     */
+    val loadingVisibility: MutableLiveData<Boolean> = MutableLiveData()
 
     init{
         loadTabs()
@@ -42,23 +42,32 @@ class TabViewModel : BaseViewModel()
     }
 
     private fun onRetrieveTabsError(error: Throwable) {
-        Log.e("Stahb", error.message!!)
+        Logger.e(error.message!!)
     }
     private fun onRetrieveTabsSuccess(result: List<Tab>) {
-
-        Log.i("Stahb", "loaded")
+        Logger.d("Loaded ${result.size} tabs")
         allTabs.value = result
 
     }
     private fun onRetrieveTabsFinish() {
-//        loadingVisibility.value = View.GONE
+        Logger.i("Finished loading tab list")
+        loadingVisibility.value = false
     }
     private fun onRetrieveTabsStart() {
-//        loadingVisibility.value = View.VISIBLE
+        Logger.i("Started loading tab list")
+        loadingVisibility.value = true
     }
 
-    fun getAllTabs() : LiveData<List<Tab>>
-    {
+    /**
+     * Disposes the subscription when the [BaseViewModel] is
+    no longer used.
+     */
+    override fun onCleared() {
+        super.onCleared()
+        subscription.dispose()
+    }
+
+    fun getAllTabs(): MutableLiveData<List<Tab>> {
         return allTabs
     }
 
