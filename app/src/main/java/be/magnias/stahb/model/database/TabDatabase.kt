@@ -1,4 +1,4 @@
-package be.magnias.stahb.data
+package be.magnias.stahb.model.database
 
 import android.content.Context
 import android.os.AsyncTask
@@ -6,6 +6,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.TabDao
 
 @Database(entities = [Tab::class], version = 1)
 abstract class TabDatabase : RoomDatabase()
@@ -52,12 +54,12 @@ abstract class TabDatabase : RoomDatabase()
     }
 
     class PopulateDbAsyncTask(db: TabDatabase?) : AsyncTask<Unit, Unit, Unit>() {
-        private val noteDao = db?.tabDao()
+        private val tabDao = db?.tabDao()
 
         override fun doInBackground(vararg p0: Unit?) {
-            noteDao?.insert(Tab("Artist 1", "Song 1", "ik", "q"))
-            noteDao?.insert(Tab("Artist 2", "Song 2", "jij", "em"))
-            noteDao?.insert(Tab("Artist 3", "Song 3", "lol", "abc"))
+            tabDao?.insert(Tab("Artist 1", "Song 1", "ik", "q"))
+            tabDao?.insert(Tab("Artist 2", "Song 2", "jij", "em"))
+            tabDao?.insert(Tab("Artist 3", "Song 3", "lol", "abc"))
         }
     }
 

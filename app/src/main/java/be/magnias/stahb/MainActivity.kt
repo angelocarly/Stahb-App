@@ -1,15 +1,13 @@
 package be.magnias.stahb
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import be.magnias.stahb.adapter.TabAdapter
-import be.magnias.stahb.data.Tab
-import be.magnias.stahb.viewmodels.TabViewModel
+import be.magnias.stahb.model.Tab
+import be.magnias.stahb.ui.TabViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
