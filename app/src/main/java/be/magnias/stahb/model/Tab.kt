@@ -5,13 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "tab_table")
 data class Tab(
+    @PrimaryKey
+    var _id: String,
     var artist: String,
     var song: String,
-    var author: String,
-    var tab: String
-) {
-
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-
-}
+    var author: String?,
+    var tab: String?
+)

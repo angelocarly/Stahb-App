@@ -2,6 +2,7 @@ package be.magnias.stahb.model
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import io.reactivex.Single
 
 @Dao
 interface TabDao {
@@ -15,7 +16,13 @@ interface TabDao {
     @Delete
     fun delete(tab: Tab)
 
+    @Query("DELETE FROM tab_table")
+    fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(tabs: List<Tab>)
+
     @Query("SELECT * FROM tab_table ORDER BY artist")
-    fun getAllTabs(): LiveData<List<Tab>>
+    fun getAllTabs(): Single<List<Tab>>
 
 }

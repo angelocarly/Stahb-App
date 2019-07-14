@@ -1,4 +1,4 @@
-package be.magnias.stahb.model.database
+package be.magnias.stahb.persistence
 
 import android.content.Context
 import android.os.AsyncTask
@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.model.TabDao
 
-@Database(entities = [Tab::class], version = 1)
+@Database(entities = [Tab::class], version = 2)
 abstract class TabDatabase : RoomDatabase()
 {
 
@@ -18,9 +18,10 @@ abstract class TabDatabase : RoomDatabase()
     companion object
     {
 
+        @Volatile
         private var instance: TabDatabase? = null
 
-        fun getInstance(context: Context): TabDatabase?
+        fun getInstance(context: Context): TabDatabase
         {
             if(instance == null)
             {
@@ -35,7 +36,7 @@ abstract class TabDatabase : RoomDatabase()
                         .build()
                 }
             }
-            return instance
+            return instance!!
         }
 
         fun destroyInstance()
@@ -57,9 +58,9 @@ abstract class TabDatabase : RoomDatabase()
         private val tabDao = db?.tabDao()
 
         override fun doInBackground(vararg p0: Unit?) {
-            tabDao?.insert(Tab("Artist 1", "Song 1", "ik", "q"))
-            tabDao?.insert(Tab("Artist 2", "Song 2", "jij", "em"))
-            tabDao?.insert(Tab("Artist 3", "Song 3", "lol", "abc"))
+            tabDao?.insert(Tab("0","Artist 1", "Song 1", "ik", "q"))
+            tabDao?.insert(Tab("1","Artist 2", "Song 2", "jij", "em"))
+            tabDao?.insert(Tab("2","Artist 3", "Song 3", "lol", "abc"))
         }
     }
 

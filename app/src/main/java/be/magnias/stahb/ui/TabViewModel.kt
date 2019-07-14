@@ -1,73 +1,63 @@
 package be.magnias.stahb.ui
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import be.magnias.stahb.App
 import be.magnias.stahb.model.Tab
+import be.magnias.stahb.persistence.TabRepository
 import be.magnias.stahb.network.StahbApi
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TabViewModel : BaseViewModel()
+class TabViewModel : ViewModel()
 {
 
     @Inject
-    lateinit var stahbApi: StahbApi
+    lateinit var tabRepository: TabRepository
 
-    private lateinit var subscription: Disposable
-
-    private var allTabs: MutableLiveData<List<Tab>> = MutableLiveData<List<Tab>>()
-
+    private var allTabs: MutableLiveData<List<Tab>> = MutableLiveData()
     /**
      * Indicates whether the loading view should be displayed.
      */
     val loadingVisibility: MutableLiveData<Boolean> = MutableLiveData()
 
     init{
-        loadTabs()
-    }
+        App.appComponent.inject(this)
 
-    private fun loadTabs(){
-        subscription = stahbApi.getTabs()
+        tabRepository.getAllTabs()
+            .observeOn(AndroidSchedulers.mainThread(), true)
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { onRetrieveTabsStart() }
-            .doOnTerminate { onRetrieveTabsFinish() }
+//            .doOnSubscribe { onRetrieveTabsStart() }
+//            .doOnTerminate { onRetrieveTabsFinish() }
+            .debounce(700, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
             .subscribe(
-                { result -> onRetrieveTabsSuccess(result) },
+                { tabs -> onRetrieveTabsSuccess(tabs) },
                 { error -> onRetrieveTabsError(error) }
             )
     }
 
-    private fun onRetrieveTabsError(error: Throwable) {
-        Logger.e(error.message!!)
-    }
-    private fun onRetrieveTabsSuccess(result: List<Tab>) {
-        Logger.d("Loaded ${result.size} tabs")
-        allTabs.value = result
+    private fun onRetrieveTabsStart(){
 
     }
-    private fun onRetrieveTabsFinish() {
-        Logger.i("Finished loading tab list")
-        loadingVisibility.value = false
-    }
-    private fun onRetrieveTabsStart() {
-        Logger.i("Started loading tab list")
-        loadingVisibility.value = true
+
+    private fun onRetrieveTabsFinish(){
+
     }
 
-    /**
-     * Disposes the subscription when the [BaseViewModel] is
-    no longer used.
-     */
-    override fun onCleared() {
-        super.onCleared()
-        subscription.dispose()
+    private fun onRetrieveTabsSuccess(tabs : List<Tab>){
+        allTabs.value = tabs
     }
 
-    fun getAllTabs(): MutableLiveData<List<Tab>> {
+    private fun onRetrieveTabsError(e: Throwable){
+        Logger.e(e.message!!)
+    }
+
+    fun getAllTabs(): LiveData<List<Tab>> {
         return allTabs
     }
 

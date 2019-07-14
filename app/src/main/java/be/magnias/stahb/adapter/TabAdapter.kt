@@ -17,7 +17,7 @@ class TabAdapter : ListAdapter<Tab, TabAdapter.TabHolder>(DIFF_CALLBACK) {
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tab>() {
             override fun areItemsTheSame(oldItem: Tab, newItem: Tab): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem._id == newItem._id
             }
 
             override fun areContentsTheSame(oldItem: Tab, newItem: Tab): Boolean {
