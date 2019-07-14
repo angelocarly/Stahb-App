@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 // Safe here as we are dealing with a Dagger 2 module
 @Suppress("unused")
-object NetworkModule {
+class NetworkModule {
     /**
      * Provides the Stahb service implementation.
      * @param retrofit the Retrofit object used to instantiate the service
