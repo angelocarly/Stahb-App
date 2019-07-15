@@ -20,6 +20,32 @@ class TabRepository(private val tabDao : TabDao)
         App.appComponent.inject(this)
     }
 
+    fun getTab(id: String) : Observable<Tab> {
+        return Observable.concatArrayEagerDelayError(
+            loadTabFromCache(id),
+            loadTabFromApi(id)
+        )
+    }
+
+   private fun loadTabFromApi(id: String): Observable<Tab> {
+        //Load tabs from network
+        return stahbApi.getTab(id)
+            .onErrorResumeNext(Observable.empty())
+            .doOnNext {
+                Logger.d("Dispatching tab $id from API")
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun loadTabFromCache(id: String): Observable<Tab> {
+        return tabDao.getTab(id)
+            .toObservable()
+            .doOnNext {
+                Logger.d("Dispatching tab $id from database")
+            }
+            .subscribeOn(Schedulers.io())
+    }
+
     fun getAllTabs(): Observable<List<Tab>> {
         return Observable.concatArrayEagerDelayError(
             loadTabsFromCache(),

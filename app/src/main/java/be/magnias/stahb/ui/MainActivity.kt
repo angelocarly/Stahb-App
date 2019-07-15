@@ -2,14 +2,7 @@ package be.magnias.stahb.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import be.magnias.stahb.R
-import be.magnias.stahb.adapter.TabInfoAdapter
-import be.magnias.stahb.model.Tab
-import be.magnias.stahb.ui.viewmodel.TabViewModel
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger.addLogAdapter
 import com.orhanobut.logger.PrettyFormatStrategy
@@ -35,11 +28,12 @@ class MainActivity : AppCompatActivity() {
 
 
         //Setup fragment
-        val fragment = TabListFragment.newInstance()
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
-
+        if (savedInstanceState == null) {
+            val fragment = TabFragment.newInstance()
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }
     }
 }

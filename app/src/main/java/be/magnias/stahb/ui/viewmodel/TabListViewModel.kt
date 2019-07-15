@@ -14,13 +14,13 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TabViewModel : ViewModel()
+class TabListViewModel : ViewModel()
 {
 
     @Inject
     lateinit var tabRepository: TabRepository
 
-    private var tab: MutableLiveData<Tab> = MutableLiveData()
+    private var allTabs: MutableLiveData<List<Tab>> = MutableLiveData()
     /**
      * Indicates whether the loading view should be displayed.
      */
@@ -29,14 +29,14 @@ class TabViewModel : ViewModel()
     init{
         App.appComponent.inject(this)
 
-        tabRepository.getTab("5d24c28a019c2408cc9fadd7")
+        tabRepository.getAllTabs()
             .observeOn(AndroidSchedulers.mainThread(), true)
             .subscribeOn(Schedulers.io())
 //            .doOnSubscribe { onRetrieveTabsStart() }
 //            .doOnTerminate { onRetrieveTabsFinish() }
             .debounce(700, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
             .subscribe(
-                { tab -> onRetrieveTabsSuccess(tab) },
+                { tabs -> onRetrieveTabsSuccess(tabs) },
                 { error -> onRetrieveTabsError(error) }
             )
     }
@@ -49,16 +49,16 @@ class TabViewModel : ViewModel()
 
     }
 
-    private fun onRetrieveTabsSuccess(tab : Tab){
-        this.tab.value = tab
+    private fun onRetrieveTabsSuccess(tabs : List<Tab>){
+        allTabs.value = tabs
     }
 
     private fun onRetrieveTabsError(e: Throwable){
         Logger.e(e.message!!)
     }
 
-    fun getTab(): LiveData<Tab> {
-        return tab
+    fun getAllTabs(): LiveData<List<Tab>> {
+        return allTabs
     }
 
 }
