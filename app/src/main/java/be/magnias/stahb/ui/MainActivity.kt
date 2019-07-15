@@ -29,11 +29,24 @@ class MainActivity : AppCompatActivity() {
 
         //Setup fragment
         if (savedInstanceState == null) {
-            val fragment = TabFragment.newInstance()
+            val fragment = TabListFragment.newInstance()
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit()
+
+            showTab("5d24c28a019c2408cc9fadd7")
         }
+
+    }
+
+    // Display a tab with id
+    fun showTab(id: String) {
+        val fragment = TabFragment.newInstance(id)
+        supportFragmentManager
+            .beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }

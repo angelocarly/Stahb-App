@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TabViewModel : ViewModel()
+class TabViewModel(id: String) : ViewModel()
 {
 
     @Inject
@@ -29,7 +29,7 @@ class TabViewModel : ViewModel()
     init{
         App.appComponent.inject(this)
 
-        tabRepository.getTab("5d24c28a019c2408cc9fadd7")
+        tabRepository.getTab(id)
             .observeOn(AndroidSchedulers.mainThread(), true)
             .subscribeOn(Schedulers.io())
 //            .doOnSubscribe { onRetrieveTabsStart() }
