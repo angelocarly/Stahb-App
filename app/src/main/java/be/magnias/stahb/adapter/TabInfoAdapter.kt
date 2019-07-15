@@ -12,7 +12,7 @@ import be.magnias.stahb.model.Tab
 import kotlinx.android.synthetic.main.tab_item.view.*
 
 
-class TabAdapter : ListAdapter<Tab, TabAdapter.TabHolder>(DIFF_CALLBACK) {
+class TabInfoAdapter : ListAdapter<Tab, TabInfoAdapter.TabHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tab>() {

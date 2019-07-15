@@ -4,7 +4,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.injection.module.DatabaseModule
 import be.magnias.stahb.injection.module.NetworkModule
 import be.magnias.stahb.persistence.TabRepository
-import be.magnias.stahb.ui.TabViewModel
+import be.magnias.stahb.ui.viewmodel.TabViewModel
 import dagger.Component
 import javax.inject.Singleton
 

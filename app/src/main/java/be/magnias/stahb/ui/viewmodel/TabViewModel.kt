@@ -1,4 +1,4 @@
-package be.magnias.stahb.ui
+package be.magnias.stahb.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

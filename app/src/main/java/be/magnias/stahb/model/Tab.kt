@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "tab_table")
-data class Tab(
+data class Tab (
     @PrimaryKey
     var _id: String,
     var artist: String,
