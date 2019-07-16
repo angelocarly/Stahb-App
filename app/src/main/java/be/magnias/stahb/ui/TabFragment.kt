@@ -12,13 +12,12 @@ import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.viewmodel.TabViewModel
 import be.magnias.stahb.ui.viewmodel.TabViewModelFactory
 import kotlinx.android.synthetic.main.fragment_tab.*
+import kotlinx.android.synthetic.main.fragment_tab.view.*
 
 
 class TabFragment : Fragment() {
 
     private lateinit var tabViewModel: TabViewModel
-
-    private lateinit var tab: Tab
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,17 +27,22 @@ class TabFragment : Fragment() {
 
         //Init viewmodel
         tabViewModel = ViewModelProviders.of(this, TabViewModelFactory(id)).get(TabViewModel::class.java)
-
-        tabViewModel.getTab().observe(this, Observer<Tab> {
-            tab_text.text = it.tab
-            val title = "${it.artist} - ${it.song}"
-            tab_title.text = title
-        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        return inflater.inflate(R.layout.fragment_tab, container, false)
+        val view = inflater.inflate(R.layout.fragment_tab, container, false)
+
+        //Load tab
+        view.loading_panel.visibility = View.VISIBLE
+        tabViewModel.getTab().observe(this, Observer<Tab> {
+            tab_text.text = it.tab
+            val title = "${it.artist} - ${it.song}"
+            tab_title.text = title
+            view.loading_panel.visibility = View.GONE
+        })
+
+        return view
     }
 
     private fun getTabId(): String {

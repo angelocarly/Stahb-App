@@ -12,6 +12,7 @@ import be.magnias.stahb.R
 import be.magnias.stahb.adapter.TabInfoAdapter
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.viewmodel.TabListViewModel
+import kotlinx.android.synthetic.main.fragment_tab_list.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
 
 class TabListFragment : Fragment() {
@@ -24,12 +25,7 @@ class TabListFragment : Fragment() {
 
         //Setup viewmodel
         tabViewModel = ViewModelProviders.of(this).get(TabListViewModel::class.java)
-        tabViewModel.getAllTabs().observe(this, Observer<List<Tab>> {
-            adapter.submitList(it)
-        })
 
-        //Setup recyclerview adapter
-        this.adapter = TabInfoAdapter()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,7 +34,16 @@ class TabListFragment : Fragment() {
         //Setup recyclerview
         view.recycler_view.layoutManager = LinearLayoutManager(activity!!.applicationContext)
         view.recycler_view.setHasFixedSize(true)
+
+        //Setup recyclerview adapter
+        this.adapter = TabInfoAdapter()
         view.recycler_view.adapter = adapter
+
+        view.loading_panel.visibility = View.VISIBLE
+        tabViewModel.getAllTabs().observe(this, Observer<List<Tab>> {
+            adapter.submitList(it)
+            view.loading_panel.visibility = View.GONE
+        })
 
         //Setup clicks
         this.adapter.onItemClick = { tab ->
