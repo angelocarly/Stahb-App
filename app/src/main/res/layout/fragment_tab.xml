@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+
+    <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.TabFragment" android:orientation="vertical">
+
+        <!-- Loading screen -->
+        <RelativeLayout
+                android:id="@+id/loading_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+
+            <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+            />
+        </RelativeLayout>
+
+        <!-- Tab data -->
+        <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tab_title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                tools:text="Artist - Song"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tab_tuning"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                tools:text="EADGBe"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tab_text"
+                android:layout_marginTop="10dp"
+                android:fontFamily="monospace"
+                tools:text="Tab"/>
+
+    </LinearLayout>
+</ScrollView>
