@@ -3,6 +3,7 @@ package be.magnias.stahb.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
+@Suppress("UNCHECKED_CAST")
 class TabViewModelFactory(private val id: String) : ViewModelProvider.NewInstanceFactory() {
 
 

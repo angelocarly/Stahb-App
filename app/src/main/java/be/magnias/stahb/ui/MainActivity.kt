@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // Display a tab with id
+    // Display a tab via id
     fun showTab(id: String) {
         val fragment = TabFragment.newInstance(id)
         supportFragmentManager

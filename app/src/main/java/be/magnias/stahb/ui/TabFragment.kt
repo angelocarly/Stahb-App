@@ -24,27 +24,37 @@ class TabFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         //Get the id from the parameters
-        val id: String
-        if(arguments != null) {
-             id = arguments!!.getString("id")
-        }
-        else
-        {
-            throw IllegalArgumentException("TabFragment requires an id")
-        }
+        val id = getTabId()
 
         //Init viewmodel
-        tabViewModel = ViewModelProviders.of(this, TabViewModelFactory (id)).get(TabViewModel::class.java)
+        tabViewModel = ViewModelProviders.of(this, TabViewModelFactory(id)).get(TabViewModel::class.java)
 
         tabViewModel.getTab().observe(this, Observer<Tab> {
             tab_text.text = it.tab
-            tab_title.text = "${it.artist} - ${it.song}"
+            val title = "${it.artist} - ${it.song}"
+            tab_title.text = title
         })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         return inflater.inflate(R.layout.fragment_tab, container, false)
+    }
+
+    private fun getTabId(): String {
+        val id: String?
+        if (arguments != null) {
+            id = arguments!!.getString("id")
+
+            if(id.isNullOrBlank()) {
+                throw IllegalArgumentException("TabFragment requires an id")
+            }
+
+        } else {
+            throw IllegalArgumentException("TabFragment requires an id")
+        }
+
+        return id
     }
 
     companion object {
