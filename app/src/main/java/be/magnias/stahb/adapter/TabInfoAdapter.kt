@@ -12,7 +12,7 @@ import be.magnias.stahb.model.Tab
 import kotlinx.android.synthetic.main.tab_item.view.*
 
 
-class TabInfoAdapter : ListAdapter<Tab, TabInfoAdapter.TabHolder>(DIFF_CALLBACK) {
+class TabInfoAdapter : ListAdapter<Tab, TabInfoAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tab>() {
@@ -26,43 +26,32 @@ class TabInfoAdapter : ListAdapter<Tab, TabInfoAdapter.TabHolder>(DIFF_CALLBACK)
         }
     }
 
-    private var listener: OnItemClickListener? = null
+    var onItemClick: ((Tab) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.tab_item, parent, false)
-        return TabHolder(itemView)
+        return ViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: TabHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentTab: Tab = getItem(position)
 
         holder.textViewArtist.text = currentTab.artist
         holder.textViewSong.text = currentTab.song
     }
 
-    fun getTabAt(position: Int): Tab {
-        return getItem(position)
-    }
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    inner class TabHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var textViewArtist: TextView = itemView.text_view_artist
+        var textViewSong: TextView = itemView.text_view_song
+
         init {
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    listener?.onItemClick(getItem(position))
+                    onItemClick?.invoke(getItem(position))
                 }
             }
         }
-
-        var textViewArtist: TextView = itemView.text_view_artist
-        var textViewSong: TextView = itemView.text_view_song
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(tab: Tab)
-    }
-
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
     }
 }

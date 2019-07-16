@@ -32,6 +32,7 @@ class TabRepository(private val tabDao : TabDao)
         return stahbApi.getTab(id)
             .onErrorResumeNext(Observable.empty())
             .doOnNext {
+                tabDao.update(it)
                 Logger.d("Dispatching tab $id from API")
             }
             .subscribeOn(Schedulers.io())
