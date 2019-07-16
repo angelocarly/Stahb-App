@@ -25,4 +25,7 @@ interface TabDao {
     @Query("SELECT * FROM tab_table ORDER BY artist")
     fun getAllTabs(): Single<List<Tab>>
 
+    @Query("SELECT * FROM tab_table WHERE _id = :id")
+    fun getTab(id: String): Single<Tab>
+
 }

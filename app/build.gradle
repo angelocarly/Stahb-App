@@ -40,6 +40,8 @@ dependencies {
 
     // Dagger
     implementation "com.google.dagger:dagger:$dagger_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     // ViewModel and LiveData

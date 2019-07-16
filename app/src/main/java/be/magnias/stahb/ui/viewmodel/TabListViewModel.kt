@@ -1,4 +1,4 @@
-package be.magnias.stahb.ui
+package be.magnias.stahb.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TabViewModel : ViewModel()
+class TabListViewModel : ViewModel()
 {
 
     @Inject
