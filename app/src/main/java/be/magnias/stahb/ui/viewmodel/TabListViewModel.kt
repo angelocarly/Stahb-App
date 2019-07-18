@@ -1,58 +1,67 @@
 package be.magnias.stahb.ui.viewmodel
 
+import android.view.View
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
-import be.magnias.stahb.model.Tab
-import be.magnias.stahb.persistence.TabRepository
-import be.magnias.stahb.network.StahbApi
-import com.orhanobut.logger.Logger
+import be.magnias.stahb.model.TabInfo
+import be.magnias.stahb.persistence.TabInfoRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TabListViewModel : ViewModel()
-{
+class TabListViewModel : ViewModel() {
 
     @Inject
-    lateinit var tabRepository: TabRepository
+    lateinit var tabInfoRepository: TabInfoRepository
 
-    private var allTabs: MutableLiveData<Resource<List<Tab>>> = MutableLiveData()
+    private var allTabs: MutableLiveData<Resource<List<TabInfo>>> = MutableLiveData()
     /**
      * Indicates whether the loading view should be displayed.
      */
-    val loadingVisibility: MutableLiveData<Boolean> = MutableLiveData()
+    private val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
-    init{
+    init {
         App.appComponent.inject(this)
 
 
-        tabRepository.getAllTabs()
+        tabInfoRepository.getAllTabs()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)
-            .debounce(700, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+//            .debounce(700, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+            .doOnSubscribe{onRetrieveTabsStart()}
+            .doOnTerminate{onRetrieveTabsFinish()}
             .subscribe(
                 { tabs -> onRetrieveTabsSuccess(tabs) },
                 { error -> onRetrieveTabsError(error) }
             )
     }
 
-    private fun onRetrieveTabsSuccess(tabs : List<Tab>){
+    private fun onRetrieveTabsStart() {
+        loadingVisibility.value = View.VISIBLE
+    }
+
+    private fun onRetrieveTabsFinish() {
+        loadingVisibility.value = View.GONE
+    }
+
+    private fun onRetrieveTabsSuccess(tabs: List<TabInfo>) {
         allTabs.value = Resource(Status.SUCCESS, tabs, null)
     }
 
-    private fun onRetrieveTabsError(e: Throwable){
+    private fun onRetrieveTabsError(e: Throwable) {
 //        Logger.e(e.message!!)
-        allTabs.value = Resource<List<Tab>>(Status.ERROR, null, e.message)
+        allTabs.value = Resource<List<TabInfo>>(Status.ERROR, null, e.message)
     }
 
-    fun getAllTabs(): LiveData<Resource<List<Tab>>> {
+    fun getLoadingVisibility(): LiveData<Int> {
+        return loadingVisibility
+    }
+
+    fun getAllTabInfo(): LiveData<Resource<List<TabInfo>>> {
         return allTabs
     }
 }

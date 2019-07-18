@@ -13,9 +13,9 @@ import be.magnias.stahb.adapter.TabInfoAdapter
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.TabInfo
 import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel
-import be.magnias.stahb.ui.viewmodel.TabListViewModel
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.loading_panel
@@ -24,6 +24,7 @@ class TabListFavoritesFragment : Fragment() {
 
     private lateinit var tabFavoritesViewModel: TabListFavoritesViewModel
     private lateinit var adapter: TabInfoAdapter
+    private var listLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +44,13 @@ class TabListFavoritesFragment : Fragment() {
         this.adapter = TabInfoAdapter()
         view.recycler_view.adapter = adapter
 
-        view.loading_panel.visibility = View.VISIBLE
-        tabFavoritesViewModel.getFavoriteTabs().observe(this, Observer<Resource<List<Tab>>> {
-            view.loading_panel.visibility = View.GONE
+        tabFavoritesViewModel.loadingVisibility.observe(this, Observer {
+            view.loading_panel.visibility = it
+        })
+
+        tabFavoritesViewModel.getAllFavoriteTabInfo().observe(this, Observer<Resource<List<TabInfo>>> {
 
             if (it.status == Status.SUCCESS) {
-                Logger.d("LOADED DATA")
 
                 if (it.data?.isEmpty()!!) {
                     view.tab_list_no_tabs.visibility = View.VISIBLE
@@ -56,6 +58,7 @@ class TabListFavoritesFragment : Fragment() {
                     view.tab_list_no_tabs.visibility = View.GONE
                     adapter.submitList(it.data)
                 }
+                listLoaded = true
             } else if (it.status == Status.ERROR) {
                 Logger.e("Error occured: ${it.message}")
                 view.tab_list_error.text = "An error occured: ${it.message}"

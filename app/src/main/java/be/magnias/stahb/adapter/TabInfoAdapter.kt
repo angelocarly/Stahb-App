@@ -9,24 +9,25 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import be.magnias.stahb.R
 import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.TabInfo
 import kotlinx.android.synthetic.main.tab_item.view.*
 
 
-class TabInfoAdapter : ListAdapter<Tab, TabInfoAdapter.ViewHolder>(DIFF_CALLBACK) {
+class TabInfoAdapter : ListAdapter<TabInfo, TabInfoAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tab>() {
-            override fun areItemsTheSame(oldItem: Tab, newItem: Tab): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TabInfo>() {
+            override fun areItemsTheSame(oldItem: TabInfo, newItem: TabInfo): Boolean {
                 return oldItem._id == newItem._id
             }
 
-            override fun areContentsTheSame(oldItem: Tab, newItem: Tab): Boolean {
+            override fun areContentsTheSame(oldItem: TabInfo, newItem: TabInfo): Boolean {
                 return oldItem.artist == newItem.artist && oldItem.song == newItem.song
             }
         }
     }
 
-    var onItemClick: ((Tab) -> Unit)? = null
+    var onItemClick: ((TabInfo) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.tab_item, parent, false)
@@ -34,7 +35,7 @@ class TabInfoAdapter : ListAdapter<Tab, TabInfoAdapter.ViewHolder>(DIFF_CALLBACK
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentTab: Tab = getItem(position)
+        val currentTab: TabInfo = getItem(position)
 
         holder.textViewArtist.text = currentTab.artist
         holder.textViewSong.text = currentTab.song

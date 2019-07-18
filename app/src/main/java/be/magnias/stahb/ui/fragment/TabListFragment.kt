@@ -12,7 +12,7 @@ import be.magnias.stahb.R
 import be.magnias.stahb.adapter.TabInfoAdapter
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
-import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.TabInfo
 import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.TabListViewModel
 import com.orhanobut.logger.Logger
@@ -43,12 +43,13 @@ class TabListFragment : Fragment() {
         this.adapter = TabInfoAdapter()
         view.recycler_view.adapter = adapter
 
-        view.loading_panel.visibility = View.VISIBLE
-        tabViewModel.getAllTabs().observe(this, Observer<Resource<List<Tab>>> {
-            view.loading_panel.visibility = View.GONE
+        tabViewModel.getLoadingVisibility().observe(this, Observer {
+            view.loading_panel.visibility = it
+        })
+
+        tabViewModel.getAllTabInfo().observe(this, Observer<Resource<List<TabInfo>>> {
 
             if (it.status == Status.SUCCESS) {
-                Logger.d("LOADED DATA")
 
                 if (it.data?.isEmpty()!!) {
                     view.tab_list_no_tabs.visibility = View.VISIBLE
@@ -62,6 +63,7 @@ class TabListFragment : Fragment() {
                 view.tab_list_error.visibility = View.VISIBLE
             }
         })
+
 
         //Setup clicks
         this.adapter.onItemClick = { tab ->
