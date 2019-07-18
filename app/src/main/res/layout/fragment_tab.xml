@@ -13,7 +13,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.TabFragment" android:orientation="vertical">
+            tools:context=".ui.fragment.TabFragment" android:orientation="vertical">
 
         <!-- Loading screen -->
         <RelativeLayout
@@ -50,13 +50,19 @@
                 android:layout_marginTop="10dp"
                 tools:text="EADGBe"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/tab_text"
-                android:layout_marginTop="10dp"
-                android:fontFamily="monospace"
-                tools:text="Tab"/>
+                android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tab_text"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="monospace"
+                    tools:text="Tab"/>
+
+        </HorizontalScrollView>
 
     </LinearLayout>
 </ScrollView>

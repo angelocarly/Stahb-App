@@ -1,4 +1,4 @@
-package be.magnias.stahb.ui
+package be.magnias.stahb.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,10 +10,14 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import be.magnias.stahb.R
 import be.magnias.stahb.adapter.TabInfoAdapter
+import be.magnias.stahb.model.Resource
+import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
+import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.TabListViewModel
-import kotlinx.android.synthetic.main.fragment_tab_list.*
+import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
+import kotlinx.android.synthetic.main.fragment_tab_list.view.loading_panel
 
 class TabListFragment : Fragment() {
 
@@ -40,9 +44,23 @@ class TabListFragment : Fragment() {
         view.recycler_view.adapter = adapter
 
         view.loading_panel.visibility = View.VISIBLE
-        tabViewModel.getAllTabs().observe(this, Observer<List<Tab>> {
-            adapter.submitList(it)
+        tabViewModel.getAllTabs().observe(this, Observer<Resource<List<Tab>>> {
             view.loading_panel.visibility = View.GONE
+
+            if (it.status == Status.SUCCESS) {
+                Logger.d("LOADED DATA")
+
+                if (it.data?.isEmpty()!!) {
+                    view.tab_list_no_tabs.visibility = View.VISIBLE
+                } else {
+                    view.tab_list_no_tabs.visibility = View.GONE
+                    adapter.submitList(it.data)
+                }
+            } else if (it.status == Status.ERROR) {
+                Logger.e("Error occured: ${it.message}")
+                view.tab_list_error.text = "An error occured: ${it.message}"
+                view.tab_list_error.visibility = View.VISIBLE
+            }
         })
 
         //Setup clicks
@@ -54,7 +72,6 @@ class TabListFragment : Fragment() {
     }
 
     companion object {
-
         fun newInstance() =
             TabListFragment()
     }

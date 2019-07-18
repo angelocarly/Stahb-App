@@ -1,4 +1,4 @@
-package be.magnias.stahb.ui
+package be.magnias.stahb.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,6 +39,7 @@ class TabFragment : Fragment() {
             tab_text.text = it.tab
             val title = "${it.artist} - ${it.song}"
             tab_title.text = title
+            tab_tuning.text = it.tuning
             view.loading_panel.visibility = View.GONE
         })
 

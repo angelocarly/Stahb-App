@@ -9,22 +9,19 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.model.TabDao
 
-@Database(entities = [Tab::class], version = 2, exportSchema = false)
+@Database(entities = [Tab::class], version = 4, exportSchema = false)
 abstract class TabDatabase : RoomDatabase()
 {
 
     abstract fun tabDao() : TabDao
 
-    companion object
-    {
+    companion object {
 
         @Volatile
         private var instance: TabDatabase? = null
 
-        fun getInstance(context: Context): TabDatabase
-        {
-            if(instance == null)
-            {
+        fun getInstance(context: Context): TabDatabase {
+            if (instance == null) {
                 synchronized(TabDatabase::class)
                 {
                     instance = Room.databaseBuilder(
@@ -32,36 +29,14 @@ abstract class TabDatabase : RoomDatabase()
                         TabDatabase::class.java, "tab_database"
                     )
                         .fallbackToDestructiveMigration()
-                        .addCallback(roomCallback)
                         .build()
                 }
             }
             return instance!!
         }
 
-        fun destroyInstance()
-        {
+        fun destroyInstance() {
             instance = null
         }
-
-        private val roomCallback = object : RoomDatabase.Callback()
-        {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                PopulateDbAsyncTask(instance)
-                    .execute()
-            }
-        }
     }
-
-    class PopulateDbAsyncTask(db: TabDatabase?) : AsyncTask<Unit, Unit, Unit>() {
-        private val tabDao = db?.tabDao()
-
-        override fun doInBackground(vararg p0: Unit?) {
-            tabDao?.insert(Tab("0","Artist 1", "Song 1", "ik", "q"))
-            tabDao?.insert(Tab("1","Artist 2", "Song 2", "jij", "em"))
-            tabDao?.insert(Tab("2","Artist 3", "Song 3", "lol", "abc"))
-        }
-    }
-
 }

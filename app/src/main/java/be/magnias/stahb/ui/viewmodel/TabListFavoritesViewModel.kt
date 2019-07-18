@@ -11,13 +11,14 @@ import be.magnias.stahb.model.Tab
 import be.magnias.stahb.persistence.TabRepository
 import be.magnias.stahb.network.StahbApi
 import com.orhanobut.logger.Logger
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TabListViewModel : ViewModel()
+class TabListFavoritesViewModel : ViewModel()
 {
 
     @Inject
@@ -33,7 +34,8 @@ class TabListViewModel : ViewModel()
         App.appComponent.inject(this)
 
 
-        tabRepository.getAllTabs()
+        tabRepository.getFavoriteTabs()
+            .onErrorResumeNext(Observable.empty())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)
             .debounce(700, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
@@ -52,7 +54,7 @@ class TabListViewModel : ViewModel()
         allTabs.value = Resource<List<Tab>>(Status.ERROR, null, e.message)
     }
 
-    fun getAllTabs(): LiveData<Resource<List<Tab>>> {
+    fun getFavoriteTabs(): LiveData<Resource<List<Tab>>> {
         return allTabs
     }
 }

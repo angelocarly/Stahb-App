@@ -10,5 +10,6 @@ data class Tab (
     var artist: String,
     var song: String,
     var author: String?,
-    var tab: String?
+    var tab: String?,
+    var tuning: String
 )

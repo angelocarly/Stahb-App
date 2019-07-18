@@ -18,4 +18,7 @@ interface StahbApi {
 
     @GET("/tabs/{id}")
     fun getTab(@Path("id") id: String): Observable<Tab>
+
+    @GET("/user/fav")
+    fun getFavorites(): Observable<List<Tab>>
 }
