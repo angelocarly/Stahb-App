@@ -22,6 +22,26 @@
         />
     </RelativeLayout>
 
+    <!-- No tabs -->
+    <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tab_list_no_tabs"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="Oops, couldn't find any tabs"/>
+
+    <!-- No internet -->
+    <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tab_list_error"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="Could not load tabs, check your internet connection"/>
+
     <!-- Tab list -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
 

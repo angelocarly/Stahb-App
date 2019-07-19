@@ -8,25 +8,27 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.model.TabDao
+import be.magnias.stahb.model.TabInfo
+import be.magnias.stahb.model.TabInfoDao
 
-@Database(entities = [Tab::class], version = 8, exportSchema = false)
-abstract class TabDatabase : RoomDatabase()
+@Database(entities = [TabInfo::class], version = 1, exportSchema = false)
+abstract class TabInfoDatabase : RoomDatabase()
 {
 
-    abstract fun tabDao() : TabDao
+    abstract fun tabInfoDao() : TabInfoDao
 
     companion object {
 
         @Volatile
-        private var instance: TabDatabase? = null
+        private var instance: TabInfoDatabase? = null
 
-        fun getInstance(context: Context): TabDatabase {
+        fun getInstance(context: Context): TabInfoDatabase {
             if (instance == null) {
-                synchronized(TabDatabase::class)
+                synchronized(TabInfoDatabase::class)
                 {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        TabDatabase::class.java, "tab_database"
+                        TabInfoDatabase::class.java, "tab_info_database"
                     )
                         .fallbackToDestructiveMigration()
                         .build()

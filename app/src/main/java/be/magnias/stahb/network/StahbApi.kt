@@ -1,7 +1,9 @@
 package be.magnias.stahb.network
 
 import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.TabInfo
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -14,8 +16,11 @@ interface StahbApi {
      * Get the list of the tabs from the API
      */
     @GET("/tabs")
-    fun getTabs(): Observable<List<Tab>>
+    fun getAllTabInfo(): Observable<List<TabInfo>>
 
     @GET("/tabs/{id}")
     fun getTab(@Path("id") id: String): Observable<Tab>
+
+    @GET("/user/fav")
+    fun getFavorites(): Observable<List<TabInfo>>
 }

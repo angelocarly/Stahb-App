@@ -13,22 +13,24 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class TabListViewModel : ViewModel() {
+class TabListFavoritesViewModel : ViewModel()
+{
 
     @Inject
     lateinit var tabInfoRepository: TabInfoRepository
 
     private var allTabs: MutableLiveData<Resource<List<TabInfo>>> = MutableLiveData()
+
     /**
      * Indicates whether the loading view should be displayed.
      */
-    private val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+    val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
-    init {
+    init{
         App.appComponent.inject(this)
 
 
-        tabInfoRepository.getAllTabs()
+        tabInfoRepository.getFavoriteTabs()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)
 //            .debounce(700, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
@@ -48,20 +50,15 @@ class TabListViewModel : ViewModel() {
         loadingVisibility.value = View.GONE
     }
 
-    private fun onRetrieveTabsSuccess(tabs: List<TabInfo>) {
+    private fun onRetrieveTabsSuccess(tabs : List<TabInfo>){
         allTabs.value = Resource(Status.SUCCESS, tabs, null)
     }
 
-    private fun onRetrieveTabsError(e: Throwable) {
-//        Logger.e(e.message!!)
+    private fun onRetrieveTabsError(e: Throwable){
         allTabs.value = Resource<List<TabInfo>>(Status.ERROR, null, e.message)
     }
 
-    fun getLoadingVisibility(): LiveData<Int> {
-        return loadingVisibility
-    }
-
-    fun getAllTabInfo(): LiveData<Resource<List<TabInfo>>> {
+    fun getAllFavoriteTabInfo(): LiveData<Resource<List<TabInfo>>> {
         return allTabs
     }
 }
