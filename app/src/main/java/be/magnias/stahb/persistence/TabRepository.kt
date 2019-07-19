@@ -2,7 +2,7 @@ package be.magnias.stahb.persistence
 
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.model.TabDao
+import be.magnias.stahb.model.dao.TabDao
 import be.magnias.stahb.network.StahbApi
 import com.orhanobut.logger.Logger
 import io.reactivex.Observable
@@ -20,7 +20,7 @@ class TabRepository(private val tabDao: TabDao) {
 
     fun getTab(id: String): Observable<Tab> {
         return Observable.concat(
-            loadTabFromCache(id),
+            loadTabFromCache(id).filter { t -> t.loaded!! },
             loadTabFromApi(id)
         )
             .firstElement()
@@ -34,6 +34,7 @@ class TabRepository(private val tabDao: TabDao) {
         return stahbApi.getTab(id)
             .onErrorResumeNext(Observable.empty())
             .doOnNext {
+                it.loaded = true
                 tabDao.insert(it)
                 Logger.d("Dispatching tab $id from API")
             }

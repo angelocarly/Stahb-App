@@ -2,12 +2,9 @@ package be.magnias.stahb.injection.module
 
 import android.app.Application
 import android.content.Context
-import be.magnias.stahb.model.TabDao
-import be.magnias.stahb.model.TabInfoDao
-import be.magnias.stahb.persistence.TabDatabase
-import be.magnias.stahb.persistence.TabInfoDatabase
-import be.magnias.stahb.persistence.TabInfoRepository
-import be.magnias.stahb.persistence.TabRepository
+import be.magnias.stahb.model.dao.TabDao
+import be.magnias.stahb.model.dao.TabViewDao
+import be.magnias.stahb.persistence.*
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -18,23 +15,17 @@ import javax.inject.Singleton
 @Module
 class DatabaseModule(private val application: Application) {
 
-    //TABINFO
+    //TABVIEW
     @Provides
     @Singleton
-    internal fun provideTabInfoRepository(tabInfoDao: TabInfoDao): TabInfoRepository {
-        return TabInfoRepository(tabInfoDao)
+    internal fun provideTabViewRepository(tabDao: TabDao, tabViewDao: TabViewDao): TabViewRepository {
+        return TabViewRepository(tabDao, tabViewDao)
     }
 
     @Provides
     @Singleton
-    internal fun provideTabInfoDao(tabInfoDatabase: TabInfoDatabase): TabInfoDao {
-        return tabInfoDatabase.tabInfoDao()
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideTabInfoDatabase(context: Context): TabInfoDatabase {
-        return TabInfoDatabase.getInstance(context)
+    internal fun provideTabViewDao(tabDatabase: TabDatabase): TabViewDao {
+        return tabDatabase.tabViewDao()
     }
 
     //TAB

@@ -9,25 +9,24 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import be.magnias.stahb.R
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.model.TabInfo
 import kotlinx.android.synthetic.main.tab_item.view.*
 
 
-class TabInfoAdapter : ListAdapter<TabInfo, TabInfoAdapter.ViewHolder>(DIFF_CALLBACK) {
+class TabAdapter : ListAdapter<Tab, TabAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TabInfo>() {
-            override fun areItemsTheSame(oldItem: TabInfo, newItem: TabInfo): Boolean {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tab>() {
+            override fun areItemsTheSame(oldItem: Tab, newItem: Tab): Boolean {
                 return oldItem._id == newItem._id
             }
 
-            override fun areContentsTheSame(oldItem: TabInfo, newItem: TabInfo): Boolean {
+            override fun areContentsTheSame(oldItem: Tab, newItem: Tab): Boolean {
                 return oldItem.artist == newItem.artist && oldItem.song == newItem.song
             }
         }
     }
 
-    var onItemClick: ((TabInfo) -> Unit)? = null
+    var onItemClick: ((Tab) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView: View = LayoutInflater.from(parent.context).inflate(R.layout.tab_item, parent, false)
@@ -35,16 +34,19 @@ class TabInfoAdapter : ListAdapter<TabInfo, TabInfoAdapter.ViewHolder>(DIFF_CALL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentTab: TabInfo = getItem(position)
+        val currentTab: Tab = getItem(position)
 
         holder.textViewArtist.text = currentTab.artist
         holder.textViewSong.text = currentTab.song
+        if(currentTab.loaded) holder.textViewCached.visibility = View.VISIBLE
+        else holder.textViewCached.visibility = View.GONE
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var textViewArtist: TextView = itemView.text_view_artist
         var textViewSong: TextView = itemView.text_view_song
+        var textViewCached: TextView = itemView.text_view_cached
 
         init {
             itemView.setOnClickListener {
