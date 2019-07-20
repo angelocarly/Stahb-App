@@ -30,6 +30,15 @@
                 android:layout_below="@id/text_view_song"
                 tools:text="Artist"/>
 
+        <TextView
+                android:id="@+id/text_view_cached"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_view_song"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:text="Cached"/>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

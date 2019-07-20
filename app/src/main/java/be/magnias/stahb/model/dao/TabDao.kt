@@ -1,14 +1,14 @@
-package be.magnias.stahb.model
+package be.magnias.stahb.model.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import be.magnias.stahb.model.Tab
 import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
 interface TabDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(tab: Tab)
 
     @Update

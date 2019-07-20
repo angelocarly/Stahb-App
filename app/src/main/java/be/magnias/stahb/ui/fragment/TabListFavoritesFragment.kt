@@ -9,11 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import be.magnias.stahb.R
-import be.magnias.stahb.adapter.TabInfoAdapter
+import be.magnias.stahb.adapter.TabAdapter
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.model.TabInfo
 import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel
 import com.orhanobut.logger.Logger
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_tab_list.view.loading_panel
 class TabListFavoritesFragment : Fragment() {
 
     private lateinit var tabFavoritesViewModel: TabListFavoritesViewModel
-    private lateinit var adapter: TabInfoAdapter
+    private lateinit var adapter: TabAdapter
     private var listLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,14 +40,14 @@ class TabListFavoritesFragment : Fragment() {
         view.recycler_view.setHasFixedSize(true)
 
         //Setup recyclerview adapter
-        this.adapter = TabInfoAdapter()
+        this.adapter = TabAdapter()
         view.recycler_view.adapter = adapter
 
         tabFavoritesViewModel.loadingVisibility.observe(this, Observer {
             view.loading_panel.visibility = it
         })
 
-        tabFavoritesViewModel.getAllFavoriteTabInfo().observe(this, Observer<Resource<List<TabInfo>>> {
+        tabFavoritesViewModel.getAllFavoriteTabInfo().observe(this, Observer<Resource<List<Tab>>> {
 
             if (it.status == Status.SUCCESS) {
 
@@ -61,7 +60,6 @@ class TabListFavoritesFragment : Fragment() {
                 listLoaded = true
             } else if (it.status == Status.ERROR) {
                 Logger.e("Error occured: ${it.message}")
-                view.tab_list_error.text = "An error occured: ${it.message}"
                 view.tab_list_error.visibility = View.VISIBLE
             }
         })

@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import be.magnias.stahb.R
+import be.magnias.stahb.model.Resource
+import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.viewmodel.TabViewModel
 import be.magnias.stahb.ui.viewmodel.TabViewModelFactory
@@ -33,14 +35,22 @@ class TabFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
 
+        tabViewModel.getLoadingVisibility().observe(this, Observer {
+            view.loading_panel.visibility = it
+        })
+
         //Load tab
-        view.loading_panel.visibility = View.VISIBLE
-        tabViewModel.getTab().observe(this, Observer<Tab> {
-            tab_text.text = it.tab
-            val title = "${it.artist} - ${it.song}"
-            tab_title.text = title
-            tab_tuning.text = it.tuning
-            view.loading_panel.visibility = View.GONE
+        tabViewModel.getTab().observe(this, Observer<Resource<Tab>> {
+            if (it.status == Status.SUCCESS) {
+                //Set tab data
+                val tab = it.data!!
+                tab_text.text = tab.tab
+                val title = "${tab.artist} - ${tab.song}"
+                tab_title.text = title
+                tab_tuning.text = tab.tuning
+            } else if (it.status == Status.ERROR) {
+                tab_error.visibility = View.VISIBLE
+            }
         })
 
         return view
@@ -51,7 +61,7 @@ class TabFragment : Fragment() {
         if (arguments != null) {
             id = arguments!!.getString("id")
 
-            if(id.isNullOrBlank()) {
+            if (id.isNullOrBlank()) {
                 throw IllegalArgumentException("TabFragment requires an id")
             }
 

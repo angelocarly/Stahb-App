@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
-import be.magnias.stahb.model.TabInfo
-import be.magnias.stahb.persistence.TabInfoRepository
+import be.magnias.stahb.model.Tab
+import be.magnias.stahb.persistence.TabViewRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -17,9 +17,9 @@ class TabListFavoritesViewModel : ViewModel()
 {
 
     @Inject
-    lateinit var tabInfoRepository: TabInfoRepository
+    lateinit var tabInfoRepository: TabViewRepository
 
-    private var allTabs: MutableLiveData<Resource<List<TabInfo>>> = MutableLiveData()
+    private var allTabs: MutableLiveData<Resource<List<Tab>>> = MutableLiveData()
 
     /**
      * Indicates whether the loading view should be displayed.
@@ -50,15 +50,15 @@ class TabListFavoritesViewModel : ViewModel()
         loadingVisibility.value = View.GONE
     }
 
-    private fun onRetrieveTabsSuccess(tabs : List<TabInfo>){
+    private fun onRetrieveTabsSuccess(tabs : List<Tab>){
         allTabs.value = Resource(Status.SUCCESS, tabs, null)
     }
 
     private fun onRetrieveTabsError(e: Throwable){
-        allTabs.value = Resource<List<TabInfo>>(Status.ERROR, null, e.message)
+        allTabs.value = Resource<List<Tab>>(Status.ERROR, null, e.message)
     }
 
-    fun getAllFavoriteTabInfo(): LiveData<Resource<List<TabInfo>>> {
+    fun getAllFavoriteTabInfo(): LiveData<Resource<List<Tab>>> {
         return allTabs
     }
 }

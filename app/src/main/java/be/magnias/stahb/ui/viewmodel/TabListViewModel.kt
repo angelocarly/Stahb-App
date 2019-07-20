@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
-import be.magnias.stahb.model.TabInfo
-import be.magnias.stahb.persistence.TabInfoRepository
+import be.magnias.stahb.model.Tab
+import be.magnias.stahb.persistence.TabViewRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -16,9 +16,9 @@ import javax.inject.Inject
 class TabListViewModel : ViewModel() {
 
     @Inject
-    lateinit var tabInfoRepository: TabInfoRepository
+    lateinit var tabViewRepository: TabViewRepository
 
-    private var allTabs: MutableLiveData<Resource<List<TabInfo>>> = MutableLiveData()
+    private var allTabs: MutableLiveData<Resource<List<Tab>>> = MutableLiveData()
     /**
      * Indicates whether the loading view should be displayed.
      */
@@ -28,7 +28,7 @@ class TabListViewModel : ViewModel() {
         App.appComponent.inject(this)
 
 
-        tabInfoRepository.getAllTabs()
+        tabViewRepository.getAllTabs()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)
 //            .debounce(700, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
@@ -48,20 +48,20 @@ class TabListViewModel : ViewModel() {
         loadingVisibility.value = View.GONE
     }
 
-    private fun onRetrieveTabsSuccess(tabs: List<TabInfo>) {
+    private fun onRetrieveTabsSuccess(tabs: List<Tab>) {
         allTabs.value = Resource(Status.SUCCESS, tabs, null)
     }
 
     private fun onRetrieveTabsError(e: Throwable) {
 //        Logger.e(e.message!!)
-        allTabs.value = Resource<List<TabInfo>>(Status.ERROR, null, e.message)
+        allTabs.value = Resource<List<Tab>>(Status.ERROR, null, e.message)
     }
 
     fun getLoadingVisibility(): LiveData<Int> {
         return loadingVisibility
     }
 
-    fun getAllTabInfo(): LiveData<Resource<List<TabInfo>>> {
+    fun getAllTabInfo(): LiveData<Resource<List<Tab>>> {
         return allTabs
     }
 }

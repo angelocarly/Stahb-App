@@ -1,8 +1,11 @@
 package be.magnias.stahb.persistence
 
 import be.magnias.stahb.App
-import be.magnias.stahb.model.TabInfo
-import be.magnias.stahb.model.TabInfoDao
+import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.TabView
+import be.magnias.stahb.model.TabViewTab
+import be.magnias.stahb.model.dao.TabDao
+import be.magnias.stahb.model.dao.TabViewDao
 import be.magnias.stahb.network.StahbApi
 import com.orhanobut.logger.Logger
 import io.reactivex.Observable
@@ -10,7 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class TabInfoRepository(private val tabInfoDao: TabInfoDao) {
+class TabViewRepository(private val tabDao: TabDao, private val tabViewDao: TabViewDao) {
     @Inject
     lateinit var stahbApi: StahbApi
 
@@ -18,7 +21,7 @@ class TabInfoRepository(private val tabInfoDao: TabInfoDao) {
         App.appComponent.inject(this)
     }
 
-    fun getAllTabs(): Observable<List<TabInfo>> {
+    fun getAllTabs(): Observable<List<Tab>> {
         return Observable.concat(
             loadTabsFromCache(),
             loadTabsFromApi())
@@ -28,7 +31,7 @@ class TabInfoRepository(private val tabInfoDao: TabInfoDao) {
             .toObservable()
     }
 
-    fun getFavoriteTabs(): Observable<List<TabInfo>> {
+    fun getFavoriteTabs(): Observable<List<Tab>> {
         return Observable.concat(
             loadFavoritesFromCache(),
             loadFavoritesFromApi())
@@ -38,22 +41,20 @@ class TabInfoRepository(private val tabInfoDao: TabInfoDao) {
             .toObservable()
     }
 
-    private fun loadFavoritesFromApi(): Observable<List<TabInfo>> {
+    private fun loadFavoritesFromApi(): Observable<List<Tab>> {
         //Load tabs from network
         return stahbApi.getFavorites()
             .doOnNext {
-                tabInfoDao.unlinkFavoriteTabs()
-                tabInfoDao.insertIgnore(it)
-                tabInfoDao.linkFavoriteTabs(it.map { t -> t._id })
-                tabInfoDao.removeUnusedTabs()
-
+                tabViewDao.removeTabViewTabsByViewId(FAVORITES_ID)
+                tabDao.insertAll(it)
+                tabViewDao.linkTabs(it.map { t -> TabViewTab(FAVORITES_ID, t._id) })
                 Logger.d("Dispatching favorites from API")
             }
             .subscribeOn(Schedulers.io())
     }
 
-    private fun loadFavoritesFromCache(): Observable<List<TabInfo>> {
-        return tabInfoDao.getAllFavorites()
+    private fun loadFavoritesFromCache(): Observable<List<Tab>> {
+        return tabViewDao.getTabViewTabs(FAVORITES_ID)
             .toObservable().filter { it.isNotEmpty() }
             .doOnNext {
                 Logger.d("Dispatching tabs from database")
@@ -61,22 +62,21 @@ class TabInfoRepository(private val tabInfoDao: TabInfoDao) {
             .subscribeOn(Schedulers.io())
     }
 
-    private fun loadTabsFromApi(): Observable<List<TabInfo>> {
+    private fun loadTabsFromApi(): Observable<List<Tab>> {
         //Load tabs from network
         return stahbApi.getAllTabInfo()
             .doOnNext {
-                tabInfoDao.unlinkNewTabs()
-                tabInfoDao.insertIgnore(it)
-                tabInfoDao.linkNewTabs(it.map { t -> t._id })
-                tabInfoDao.removeUnusedTabs()
+                tabViewDao.removeTabViewTabsByViewId(NEW_ID)
+                tabDao.insertAll(it)
+                tabViewDao.linkTabs(it.map { t -> TabViewTab(NEW_ID, t._id) })
 
                 Logger.d("Dispatching tabs from API")
             }
             .subscribeOn(Schedulers.io())
     }
 
-    private fun loadTabsFromCache(): Observable<List<TabInfo>> {
-        return tabInfoDao.getAllNew()
+    private fun loadTabsFromCache(): Observable<List<Tab>> {
+        return tabViewDao.getTabViewTabs(NEW_ID)
             .toObservable().filter { it.isNotEmpty() }
             .doOnNext {
                 Logger.d("Dispatching tabs from database")
