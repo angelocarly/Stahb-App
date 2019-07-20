@@ -59,7 +59,6 @@ class TabListFragment : Fragment() {
                 }
             } else if (it.status == Status.ERROR) {
                 Logger.e("Error occured: ${it.message}")
-                view.tab_list_error.text = "An error occured: ${it.message}"
                 view.tab_list_error.visibility = View.VISIBLE
             }
         })

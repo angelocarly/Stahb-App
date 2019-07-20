@@ -33,14 +33,12 @@
             android:text="Oops, couldn't find any tabs"/>
 
     <!-- No internet -->
-    <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/tab_list_error"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:text="Could not load tabs, check your internet connection"/>
+    <!-- Error -->
+    <include layout="@layout/no_internet"
+             android:id="@+id/tab_list_error"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:visibility="gone"/>
 
     <!-- Tab list -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout

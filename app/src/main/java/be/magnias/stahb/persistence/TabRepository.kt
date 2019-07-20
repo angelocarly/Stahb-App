@@ -20,7 +20,7 @@ class TabRepository(private val tabDao: TabDao) {
 
     fun getTab(id: String): Observable<Tab> {
         return Observable.concat(
-            loadTabFromCache(id).filter { t -> t.loaded!! },
+            loadTabFromCache(id).filter { t -> t.loaded },
             loadTabFromApi(id)
         )
             .firstElement()
@@ -32,7 +32,6 @@ class TabRepository(private val tabDao: TabDao) {
     private fun loadTabFromApi(id: String): Observable<Tab> {
         //Load tabs from network
         return stahbApi.getTab(id)
-            .onErrorResumeNext(Observable.empty())
             .doOnNext {
                 it.loaded = true
                 tabDao.insert(it)

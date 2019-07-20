@@ -30,6 +30,13 @@
             />
         </RelativeLayout>
 
+        <!-- Error -->
+        <include layout="@layout/no_internet"
+                 android:id="@+id/tab_error"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:visibility="gone"/>
+
         <!-- Tab data -->
         <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
