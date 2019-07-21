@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -77,7 +78,13 @@ class TabListFavoritesFragment : Fragment() {
         }
 
         tabFavoritesViewModel.getRefreshLoadingVisibility().observe(this, Observer {
-            view.tab_list_swipe_refresh.isRefreshing = false
+
+            if (view.tab_list_swipe_refresh.isRefreshing) {
+                if (it.status == Status.ERROR) {
+                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                }
+                view.tab_list_swipe_refresh.isRefreshing = false
+            }
         })
 
         return view
