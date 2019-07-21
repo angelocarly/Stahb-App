@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -49,6 +50,8 @@ class TabListFavoritesFragment : Fragment() {
 
         tabFavoritesViewModel.getAllFavoriteTabInfo().observe(this, Observer<Resource<List<Tab>>> {
 
+            Logger.d("[Favorites list] Received new tabs")
+
             if (it.status == Status.SUCCESS) {
 
                 if (it.data?.isEmpty()!!) {
@@ -69,7 +72,26 @@ class TabListFavoritesFragment : Fragment() {
             (activity as MainActivity).showTab(tab._id)
         }
 
+        //Setup swipe refresh
+        view.tab_list_swipe_refresh.setOnRefreshListener {
+            refreshTabs()
+        }
+
+        tabFavoritesViewModel.getRefreshLoadingVisibility().observe(this, Observer {
+
+            if (view.tab_list_swipe_refresh.isRefreshing) {
+                if (it.status == Status.ERROR) {
+                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                }
+                view.tab_list_swipe_refresh.isRefreshing = false
+            }
+        })
+
         return view
+    }
+
+    private fun refreshTabs() {
+        tabFavoritesViewModel.refreshTabs()
     }
 
     companion object {

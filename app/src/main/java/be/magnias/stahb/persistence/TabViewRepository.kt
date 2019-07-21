@@ -11,6 +11,7 @@ import com.orhanobut.logger.Logger
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 class TabViewRepository(private val tabDao: TabDao, private val tabViewDao: TabViewDao) {
@@ -22,66 +23,73 @@ class TabViewRepository(private val tabDao: TabDao, private val tabViewDao: TabV
     }
 
     fun getAllTabs(): Observable<List<Tab>> {
-        return Observable.concat(
+
+        return Observable.concatArray(
             loadTabsFromCache(),
-            loadTabsFromApi())
-            .firstElement()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
+            loadTabsFromApi()
+        )
+//        return Observable.concatArray(
+//            loadTabsFromCache()
+//                .doOnNext { t: List<Tab>? ->
+//                    Logger.d("update")
+//                },
+//            loadTabsFromApi())
+////            .firstElement()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getFavoriteTabs(): Observable<List<Tab>> {
-        return Observable.concat(
+        return Observable.concatArray(
             loadFavoritesFromCache(),
-            loadFavoritesFromApi())
-            .firstElement()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .toObservable()
+            loadFavoritesFromApi()
+        )
+    }
+
+    fun refreshAllTabs(): Observable<List<Tab>> {
+        return loadTabsFromApi()
+            .doOnError { e -> Logger.e(e.message.toString()) }
+    }
+
+    fun refreshFavoriteTabs(): Observable<List<Tab>> {
+        return loadFavoritesFromApi()
+            .doOnError { e -> Logger.e(e.message.toString()) }
     }
 
     private fun loadFavoritesFromApi(): Observable<List<Tab>> {
         //Load tabs from network
         return stahbApi.getFavorites()
             .doOnNext {
-                tabViewDao.removeTabViewTabsByViewId(FAVORITES_ID)
                 tabDao.insertAll(it)
-                tabViewDao.linkTabs(it.map { t -> TabViewTab(FAVORITES_ID, t._id) })
-                Logger.d("Dispatching favorites from API")
+                tabViewDao.linkAllTabs(FAVORITES_ID, it)
             }
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     private fun loadFavoritesFromCache(): Observable<List<Tab>> {
         return tabViewDao.getTabViewTabs(FAVORITES_ID)
-            .toObservable().filter { it.isNotEmpty() }
-            .doOnNext {
-                Logger.d("Dispatching tabs from database")
-            }
+            .toObservable()
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     private fun loadTabsFromApi(): Observable<List<Tab>> {
         //Load tabs from network
         return stahbApi.getAllTabInfo()
             .doOnNext {
-                tabViewDao.removeTabViewTabsByViewId(NEW_ID)
                 tabDao.insertAll(it)
-                tabViewDao.linkTabs(it.map { t -> TabViewTab(NEW_ID, t._id) })
-
-                Logger.d("Dispatching tabs from API")
+                tabViewDao.linkAllTabs(NEW_ID, it)
             }
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     private fun loadTabsFromCache(): Observable<List<Tab>> {
         return tabViewDao.getTabViewTabs(NEW_ID)
-            .toObservable().filter { it.isNotEmpty() }
-            .doOnNext {
-                Logger.d("Dispatching tabs from database")
-            }
+            .toObservable()
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
 
