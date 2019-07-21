@@ -4,44 +4,54 @@ import androidx.room.*
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.model.TabView
 import be.magnias.stahb.model.TabViewTab
+import be.magnias.stahb.persistence.FAVORITES_ID
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 
 @Dao
-interface TabViewDao {
+abstract class TabViewDao {
 
     @Insert
-    fun insert(tab: TabView)
+    abstract fun insert(tab: TabView)
 
     @Update
-    fun update(tab: TabView)
+    abstract fun update(tab: TabView)
 
     @Delete
-    fun delete(tab: TabView)
+    abstract fun delete(tab: TabView)
 
     @Query("SELECT * FROM tab_table WHERE _id = :id")
-    fun getTab(id: String): Single<Tab>
+    abstract fun getTab(id: String): Single<Tab>
 
     @Query("SELECT * FROM tab_view_table WHERE _id = :id")
-    fun getTabView(id: String): Single<TabView>
+    abstract fun getTabView(id: String): Single<TabView>
 
     @Query("DELETE FROM tab_view_table")
-    fun deleteAll()
+    abstract fun deleteAll()
 
     @Insert
-    fun insert(tabViewTab: TabViewTab)
+    abstract fun insert(tabViewTab: TabViewTab)
 
     @Insert
-    fun linkTabs(tabViewTabs: List<TabViewTab>)
+    abstract fun insertAll(tabViewTabs: List<TabViewTab>)
 
     @Transaction
     @Query("""
         SELECT * fROM tab_table t INNER JOIN tab_view_tab_table tvt ON t._id = tvt.tabId
         WHERE tvt.tabViewId = :id
     """)
-    fun getTabViewTabs(id: String): Single<List<Tab>>
+    abstract fun getTabViewTabs(id: String): Flowable<List<Tab>>
 
 
     @Query("DELETE FROM tab_view_tab_table WHERE tabViewId = :tabViewId")
-    fun removeTabViewTabsByViewId(tabViewId: String)
+    abstract fun removeTabViewTabsByViewId(tabViewId: String)
+
+    //Remove all relations between
+    @Transaction
+    open fun linkAllTabs(tabViewId: String, tabs: List<Tab>) {
+        removeTabViewTabsByViewId(tabViewId)
+        insertAll(tabs.map { t -> TabViewTab(tabViewId, t._id) })
+    }
 
 }

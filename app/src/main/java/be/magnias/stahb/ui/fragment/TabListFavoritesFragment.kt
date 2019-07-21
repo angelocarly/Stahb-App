@@ -49,6 +49,8 @@ class TabListFavoritesFragment : Fragment() {
 
         tabFavoritesViewModel.getAllFavoriteTabInfo().observe(this, Observer<Resource<List<Tab>>> {
 
+            Logger.d("[Favorites list] Received new tabs")
+
             if (it.status == Status.SUCCESS) {
 
                 if (it.data?.isEmpty()!!) {
@@ -69,7 +71,20 @@ class TabListFavoritesFragment : Fragment() {
             (activity as MainActivity).showTab(tab._id)
         }
 
+        //Setup swipe refresh
+        view.tab_list_swipe_refresh.setOnRefreshListener {
+            refreshTabs()
+        }
+
+        tabFavoritesViewModel.getRefreshLoadingVisibility().observe(this, Observer {
+            view.tab_list_swipe_refresh.isRefreshing = false
+        })
+
         return view
+    }
+
+    private fun refreshTabs() {
+        tabFavoritesViewModel.refreshTabs()
     }
 
     companion object {

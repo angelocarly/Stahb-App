@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import be.magnias.stahb.R
 import be.magnias.stahb.adapter.TabAdapter
 import be.magnias.stahb.model.Resource
@@ -16,6 +17,7 @@ import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.TabListViewModel
 import com.orhanobut.logger.Logger
+import kotlinx.android.synthetic.main.fragment_tab_list.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.loading_panel
 
@@ -49,6 +51,8 @@ class TabListFragment : Fragment() {
 
         tabViewModel.getAllTabInfo().observe(this, Observer<Resource<List<Tab>>> {
 
+            Logger.d("Received new tabs")
+
             if (it.status == Status.SUCCESS) {
 
                 if (it.data?.isEmpty()!!) {
@@ -69,7 +73,20 @@ class TabListFragment : Fragment() {
             (activity as MainActivity).showTab(tab._id)
         }
 
+        //Setup swipe refresh
+        view.tab_list_swipe_refresh.setOnRefreshListener {
+            refreshTabs()
+        }
+
+        tabViewModel.getRefreshLoadingVisibility().observe(this, Observer {
+            view.tab_list_swipe_refresh.isRefreshing = false
+        })
+
         return view
+    }
+
+    private fun refreshTabs() {
+        tabViewModel.refreshTabs()
     }
 
     companion object {
