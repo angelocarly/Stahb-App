@@ -23,8 +23,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
-
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
         //Display toast error message on refresh failure

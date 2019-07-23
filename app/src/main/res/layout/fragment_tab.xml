@@ -1,75 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/SCROLLER_ID"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-    <LinearLayout
-
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".ui.fragment.TabFragment" android:orientation="vertical">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            style="@style/ToolBarStyle">
 
-        <!-- Loading screen -->
-        <RelativeLayout
-                android:id="@+id/loading_panel"
+        <CheckBox
+                android:id="@+id/checkbox_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/favorite_checkbox"
+                android:background="@null"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+            android:id="@+id/SCROLLER_ID"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:fillViewport="true">
+
+        <LinearLayout
+
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:visibility="gone">
+                android:layout_height="wrap_content"
+                tools:context=".ui.fragment.TabFragment" android:orientation="vertical">
 
-            <ProgressBar
-                    android:layout_width="wrap_content"
+            <!-- Loading screen -->
+            <RelativeLayout
+                    android:id="@+id/loading_panel"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                />
+            </RelativeLayout>
+
+            <!-- Error -->
+            <include layout="@layout/no_internet"
+                     android:id="@+id/tab_error"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:visibility="gone"/>
+
+            <!-- Tab data -->
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:indeterminate="true"
-            />
-        </RelativeLayout>
-
-        <!-- Error -->
-        <include layout="@layout/no_internet"
-                 android:id="@+id/tab_error"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:visibility="gone"/>
-
-        <!-- Tab data -->
-        <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tab_title"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                tools:text="Artist - Song"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tab_tuning"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                tools:text="EADGBe"/>
-
-        <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                    android:id="@+id/tab_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    tools:text="Artist - Song"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/tab_text"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tab_tuning"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:gravity="center"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="monospace"
-                    tools:text="Tab"/>
+                    tools:text="EADGBe"/>
 
-        </HorizontalScrollView>
+            <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    </LinearLayout>
-</ScrollView>
+                <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/tab_text"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="monospace"
+                        tools:text="Tab"/>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

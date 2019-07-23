@@ -2,6 +2,7 @@ package be.magnias.stahb.model.dao
 
 import androidx.room.*
 import be.magnias.stahb.model.Tab
+import com.orhanobut.logger.Logger
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -11,6 +12,8 @@ abstract class TabDao {
 
     @Transaction
     open fun updateAll(favorites: List<Tab>, tabs: List<Tab>) {
+        Logger.d("Updating database")
+        removeAllFavorites()
         insertAll(tabs)
         insertAll(favorites)
         addFavorites(favorites.map { t -> t._id })
@@ -20,7 +23,7 @@ abstract class TabDao {
     abstract fun insert(tab: Tab)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertIgnoreConflict(tab: Tab)
+    abstract fun insertIgnoreConflict(tab: Tab): Long
 
     @Update
     abstract fun update(tab: Tab)
@@ -37,6 +40,15 @@ abstract class TabDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertAll(tabs: List<Tab>)
 
+    @Query("UPDATE tab_table SET favorite = 1 WHERE _id = :tabId")
+    abstract fun addFavorite(tabId: String)
+
+    @Query("UPDATE tab_table SET favorite = 0 WHERE _id = :tabId")
+    abstract fun removeFavorite(tabId: String)
+
+    @Query("UPDATE tab_table SET favorite = 0 WHERE favorite = 1")
+    abstract fun removeAllFavorites()
+
     @Query("UPDATE tab_table SET favorite = 1 WHERE _id IN (:tabs)")
     abstract fun addFavorites(tabs: List<String>)
 
@@ -47,7 +59,7 @@ abstract class TabDao {
     abstract fun getAllTabs(): Observable<List<Tab>>
 
     @Query("SELECT * FROM tab_table WHERE _id = :id")
-    abstract fun getTab(id: String): Maybe<Tab>
+    abstract fun getTab(id: String): Observable<Tab>
 
     @Query("SELECT * FROM tab_table WHERE _id = :id AND last_update >= :timeout")
     abstract fun hasTab(id: String, timeout: Int) : Int

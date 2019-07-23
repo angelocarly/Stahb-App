@@ -13,6 +13,7 @@ import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.viewmodel.TabViewModel
 import be.magnias.stahb.ui.viewmodel.TabViewModelFactory
+import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab.*
 import kotlinx.android.synthetic.main.fragment_tab.view.*
 
@@ -27,6 +28,8 @@ class TabFragment : Fragment() {
         //Get the id from the parameters
         val id = getTabId()
 
+        setHasOptionsMenu(true)
+
         //Init viewmodel
         tabViewModel = ViewModelProviders.of(this, TabViewModelFactory(id)).get(TabViewModel::class.java)
     }
@@ -35,11 +38,19 @@ class TabFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
 
-        tabViewModel.getLoadingVisibility().observe(this, Observer {
-            view.loading_panel.visibility = it
+        //Losding panel visibility
+        tabViewModel.getLoadingVisibility().observe(this, Observer {loadingVisible ->
+            if(loadingVisible) {
+                view.loading_panel.visibility = View.VISIBLE
+                view.checkbox_favorite.visibility = View.GONE
+            }
+            else {
+                view.loading_panel.visibility = View.GONE
+                view.checkbox_favorite.visibility = View.VISIBLE
+            }
         })
 
-        //Load tab
+        //Load tab data
         tabViewModel.getTab().observe(this, Observer<Resource<Tab>> {
             if (it.status == Status.SUCCESS) {
                 //Set tab data
@@ -48,14 +59,28 @@ class TabFragment : Fragment() {
                 val title = "${tab.artist} - ${tab.song}"
                 tab_title.text = title
                 tab_tuning.text = tab.tuning
+
+                view.checkbox_favorite.isChecked = tab.favorite
+
             } else if (it.status == Status.ERROR) {
                 tab_error.visibility = View.VISIBLE
             }
         })
 
+        //Add or remove tab based on favorite button
+        view.checkbox_favorite.setOnClickListener {
+            if(view.checkbox_favorite.isChecked) {
+                tabViewModel.addToFavorite()
+            }
+            else {
+                tabViewModel.removeFromFavorite()
+            }
+        }
+
         return view
     }
 
+    //Get the tab id from the fragment parameters
     private fun getTabId(): String {
         val id: String?
         if (arguments != null) {
@@ -72,6 +97,7 @@ class TabFragment : Fragment() {
         return id
     }
 
+    //Instance method
     companion object {
         fun newInstance(id: String): TabFragment {
 
