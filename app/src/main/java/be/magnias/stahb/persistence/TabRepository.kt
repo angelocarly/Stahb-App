@@ -23,10 +23,11 @@ class TabRepository(private val tabDao: TabDao) {
 
         //Refresh the data in the cache
         //Fetches the favorites and new tabs from the api, update the cache when both are loaded
+        //TODO: change onerror ignoring to resource object
         return Observable
             .combineLatest(
                 loadFavoritesFromApi().singleOrError().toObservable().subscribeOn(Schedulers.io()),
-                loadTabsFromApi().singleOrError().toObservable().subscribeOn(Schedulers.io()),
+                loadTabsFromApi().singleOrError().toObservable().onErrorResumeNext(Observable.empty()).subscribeOn(Schedulers.io()),
                 BiFunction { favorites: List<Tab>, tabs : List<Tab> ->
                     tabDao.updateAll(favorites, tabs)
                 }
