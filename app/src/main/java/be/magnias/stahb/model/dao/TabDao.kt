@@ -3,38 +3,52 @@ package be.magnias.stahb.model.dao
 import androidx.room.*
 import be.magnias.stahb.model.Tab
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.Single
 
 @Dao
-interface TabDao {
+abstract class TabDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(tab: Tab)
+    @Transaction
+    open fun updateAll(favorites: List<Tab>, tabs: List<Tab>) {
+        insertAll(tabs)
+        insertAll(favorites)
+        addFavorites(favorites.map { t -> t._id })
+    }
 
-    @Update
-    fun update(tab: Tab)
-
-    @Delete
-    fun delete(tab: Tab)
-
-    @Query("UPDATE tab_table SET favorite = 0 WHERE favorite = 1")
-    fun revokeAllFavorites()
-
-    @Query("DELETE FROM tab_table")
-    fun deleteAll()
+    @Insert
+    abstract fun insert(tab: Tab)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(tabs: List<Tab>)
+    abstract fun insertIgnoreConflict(tab: Tab)
+
+    @Update
+    abstract fun update(tab: Tab)
+
+    @Query("UPDATE tab_table SET artist = :artist, song = :song, tab = :tab, tuning = :tuning, loaded = :loaded WHERE _id = :id")
+    abstract fun updateFields(id: String, artist: String, song: String, tab: String, tuning: String, loaded: Boolean)
+
+    @Delete
+    abstract fun delete(tab: Tab)
+
+    @Query("DELETE FROM tab_table")
+    abstract fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract fun insertAll(tabs: List<Tab>)
+
+    @Query("UPDATE tab_table SET favorite = 1 WHERE _id IN (:tabs)")
+    abstract fun addFavorites(tabs: List<String>)
+
+    @Query("SELECT * FROM tab_table WHERE favorite = 1")
+    abstract fun getFavorites(): Observable<List<Tab>>
 
     @Query("SELECT * FROM tab_table ORDER BY artist")
-    fun getAllTabs(): Single<List<Tab>>
-
-    @Query("SELECT * FROM tab_table WHERE favorite = 1 ORDER BY artist")
-    fun getAllFavorites(): Single<List<Tab>>
+    abstract fun getAllTabs(): Observable<List<Tab>>
 
     @Query("SELECT * FROM tab_table WHERE _id = :id")
-    fun getTab(id: String): Maybe<Tab>
+    abstract fun getTab(id: String): Maybe<Tab>
 
     @Query("SELECT * FROM tab_table WHERE _id = :id AND last_update >= :timeout")
-    fun hasTab(id: String, timeout: Int) : Int
+    abstract fun hasTab(id: String, timeout: Int) : Int
 }

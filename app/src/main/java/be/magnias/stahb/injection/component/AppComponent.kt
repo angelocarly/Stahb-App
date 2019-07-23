@@ -4,7 +4,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.injection.module.DatabaseModule
 import be.magnias.stahb.injection.module.NetworkModule
 import be.magnias.stahb.persistence.TabRepository
-import be.magnias.stahb.persistence.TabViewRepository
+import be.magnias.stahb.ui.viewmodel.MainViewModel
 import be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel
 import dagger.Component
 import be.magnias.stahb.ui.viewmodel.TabListViewModel
@@ -26,7 +26,7 @@ interface AppComponent {
     fun inject(tabListViewModel: TabListViewModel)
     fun inject(tabListFavoritesViewModel: TabListFavoritesViewModel)
     fun inject(tabRepository: TabRepository)
-    fun inject(tabViewRepository: TabViewRepository)
+    fun inject(mainViewModel: MainViewModel)
 
     @Component.Builder
     interface Builder {

@@ -3,7 +3,6 @@ package be.magnias.stahb.injection.module
 import android.app.Application
 import android.content.Context
 import be.magnias.stahb.model.dao.TabDao
-import be.magnias.stahb.model.dao.TabViewDao
 import be.magnias.stahb.persistence.*
 import dagger.Module
 import dagger.Provides
@@ -14,19 +13,6 @@ import javax.inject.Singleton
  */
 @Module
 class DatabaseModule(private val application: Application) {
-
-    //TABVIEW
-    @Provides
-    @Singleton
-    internal fun provideTabViewRepository(tabDao: TabDao, tabViewDao: TabViewDao): TabViewRepository {
-        return TabViewRepository(tabDao, tabViewDao)
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideTabViewDao(tabDatabase: TabDatabase): TabViewDao {
-        return tabDatabase.tabViewDao()
-    }
 
     //TAB
     @Provides

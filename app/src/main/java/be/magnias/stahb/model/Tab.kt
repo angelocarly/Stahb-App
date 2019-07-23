@@ -12,7 +12,7 @@ data class Tab (
     var author: String?,
     var tab: String?,
     var tuning: String?,
-    var favorite: Boolean?,
+    var favorite: Boolean = false,
     var last_update: Int,
     var loaded: Boolean = false
 )
