@@ -10,6 +10,7 @@ import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.persistence.TabRepository
 import com.orhanobut.logger.Logger
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -42,7 +43,7 @@ class MainViewModel : ViewModel() {
                 Logger.d("Refreshed tabs")
             }
             .subscribe(
-                {  },
+                { result ->  },
                 { error ->
                     refreshLoadingVisibility.value = Resource(Status.ERROR, true, error.message)
                     Logger.e(error.message!!)
