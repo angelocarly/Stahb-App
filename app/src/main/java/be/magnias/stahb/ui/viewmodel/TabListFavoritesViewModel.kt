@@ -8,7 +8,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.persistence.TabViewRepository
+import be.magnias.stahb.persistence.TabRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +18,7 @@ class TabListFavoritesViewModel : ViewModel()
 {
 
     @Inject
-    lateinit var tabViewRepository: TabViewRepository
+    lateinit var tabRepository: TabRepository
 
     private var allTabs: MutableLiveData<Resource<List<Tab>>> = MutableLiveData()
 
@@ -26,16 +26,13 @@ class TabListFavoritesViewModel : ViewModel()
      * Indicates whether the loading view should be displayed.
      */
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
-    private val refreshLoadingVisibility = MutableLiveData<Resource<Boolean>>()
 
     private var subscription: Disposable
-    private var refreshSubscription: Disposable? = null
 
     init{
         App.appComponent.inject(this)
 
-
-        subscription = tabViewRepository.getFavoriteTabs()
+        subscription = tabRepository.getFavoriteTabs()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)
             .doOnSubscribe{onRetrieveTabsStart()}
@@ -65,25 +62,8 @@ class TabListFavoritesViewModel : ViewModel()
         return allTabs
     }
 
-    fun getRefreshLoadingVisibility(): LiveData<Resource<Boolean>> {
-        return refreshLoadingVisibility
-    }
-
-    fun refreshTabs() {
-        if(refreshSubscription != null) refreshSubscription!!.dispose()
-        refreshSubscription = tabViewRepository.refreshFavoriteTabs()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .firstOrError()
-            .subscribe(
-                { refreshLoadingVisibility.value = Resource(Status.SUCCESS, true, null) },
-                { error -> refreshLoadingVisibility.value = Resource(Status.ERROR, true, error.message) }
-            )
-    }
-
     override fun onCleared() {
         super.onCleared()
         subscription.dispose()
-        if(refreshSubscription != null) refreshSubscription!!.dispose()
     }
 }

@@ -6,52 +6,51 @@
         android:id="@+id/tab_list_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<LinearLayout
+    <LinearLayout
 
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:orientation="vertical">
-
-    <!-- Loading screen -->
-    <RelativeLayout
-            android:id="@+id/loading_panel"
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone">
-
-        <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-        />
-    </RelativeLayout>
-
-    <!-- No tabs -->
-    <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/tab_list_no_tabs"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:text="Oops, couldn't find any tabs"/>
+            android:orientation="vertical">
 
-    <!-- No internet -->
-    <!-- Error -->
-    <include layout="@layout/no_internet"
-             android:id="@+id/tab_list_error"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:visibility="gone"/>
+        <!-- Loading screen -->
+        <RelativeLayout
+                android:id="@+id/loading_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
 
-    <!-- Tab list -->
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+            />
+        </RelativeLayout>
 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.MainActivity">
+        <!-- No tabs -->
+        <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tab_list_no_tabs"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="Oops, couldn't find any tabs"/>
 
+        <!-- No internet -->
+        <!-- Error -->
+        <include layout="@layout/no_internet"
+                 android:id="@+id/tab_list_error"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:visibility="gone"/>
+
+        <!-- Tab list -->
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ui.MainActivity">
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -62,7 +61,8 @@
             />
 
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</LinearLayout>
+    </LinearLayout>
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

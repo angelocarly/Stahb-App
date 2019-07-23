@@ -16,6 +16,7 @@ import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.MainActivity
+import be.magnias.stahb.ui.viewmodel.MainViewModel
 import be.magnias.stahb.ui.viewmodel.TabListViewModel
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab_list.*
@@ -52,7 +53,7 @@ class TabListFragment : Fragment() {
 
         tabViewModel.getAllTabInfo().observe(this, Observer<Resource<List<Tab>>> {
 
-            Logger.d("Received new tabs")
+            Logger.d("{New list} Received new tabs")
 
             if (it.status == Status.SUCCESS) {
 
@@ -68,32 +69,26 @@ class TabListFragment : Fragment() {
             }
         })
 
-
         //Setup clicks
         this.adapter.onItemClick = { tab ->
             (activity as MainActivity).showTab(tab._id)
         }
 
         //Setup swipe refresh
-        view.tab_list_swipe_refresh.setOnRefreshListener {
-            refreshTabs()
+        activity?.let {
+            val sharedViewModel = ViewModelProviders.of(it).get(MainViewModel::class.java)
+
+            //Setup swipe refresh
+            view.tab_list_swipe_refresh.setOnRefreshListener {
+                sharedViewModel.refreshTabs()
+            }
+
+            sharedViewModel.getRefreshLoadingVisibility().observe(this, Observer {
+                view.tab_list_swipe_refresh.isRefreshing = false
+            })
         }
 
-        tabViewModel.getRefreshLoadingVisibility().observe(this, Observer {
-
-            if (view.tab_list_swipe_refresh.isRefreshing) {
-                if (it.status == Status.ERROR) {
-                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
-                }
-                view.tab_list_swipe_refresh.isRefreshing = false
-            }
-        })
-
         return view
-    }
-
-    private fun refreshTabs() {
-        tabViewModel.refreshTabs()
     }
 
     companion object {
