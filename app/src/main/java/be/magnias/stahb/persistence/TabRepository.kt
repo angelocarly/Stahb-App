@@ -1,5 +1,8 @@
 package be.magnias.stahb.persistence
 
+import android.os.AsyncTask
+import android.util.Log
+import androidx.annotation.WorkerThread
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.model.dao.TabDao
@@ -11,6 +14,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.doAsync
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 class TabRepository(private val tabDao: TabDao) {
@@ -21,28 +28,59 @@ class TabRepository(private val tabDao: TabDao) {
         App.appComponent.inject(this)
     }
 
-    fun fetch(): Observable<Boolean> {
 
+    fun push(): Observable<Boolean> {
+        var tabs : List<Tab>? = null
+        return tabDao.getAllUpdatedTabs().firstOrError()
+            .doOnSuccess {
+                tabs = it
+            }
+            .map { true }
+            .toObservable()
+            .doOnComplete {
+                tabs?.forEach { t ->
+                    if (t.favorite) {
+                        stahbApi.addFavorite(t._id).execute()
+                    }
+                    else {
+                        stahbApi.deleteFavorite(t._id).execute()
+                    }
+                }
+                Logger.w("Updated push")
+            }
+    }
+
+    fun fetch(): Observable<Boolean> {
         //Refresh the data in the cache
         //Fetches the favorites and new tabs from the api, update the cache when both are loaded
-        //TODO: change onerror ignoring to resource object
-        return Observable
-            .combineLatest(
-                loadFavoritesFromApi().singleOrError().toObservable().subscribeOn(Schedulers.io()),
-                loadTabsFromApi().singleOrError().toObservable().onErrorResumeNext(Observable.empty()).subscribeOn(
-                    Schedulers.io()
-                ),
-                BiFunction { favorites: List<Tab>, tabs: List<Tab> ->
-                    tabDao.updateAll(favorites, tabs)
-                }
-            )
+        return Observable.combineLatest(
+            loadFavoritesFromApi()
+                .singleOrError()
+                .toObservable()
+                .subscribeOn(Schedulers.io()),
+            loadTabsFromApi()
+                .singleOrError()
+                .toObservable()
+                .onErrorResumeNext(Observable.empty())
+                .subscribeOn(Schedulers.io()),
+            BiFunction { favorites: List<Tab>, tabs: List<Tab> ->
+                tabDao.updateAll(favorites, tabs)
+                Logger.w("Updated fetch")
+            }
+        )
             .map { true }
     }
 
+    fun refresh(): Observable<Boolean> {
+        return Observable.concat(
+            push(),
+            fetch()
+        )
+    }
+
     //Load tab from network
-    //Tries to insert the loaded tab, without overwriting
-    //Next, it updates the fields of the database field incase the write failed
-    //TODO: Simplify function
+//Tries to insert the loaded tab, without overwriting
+//Next, it updates the fields of the database field incase the write failed
     fun fetchTab(id: String): Observable<Tab> {
         return loadTabFromApi(id)
             .doOnNext {
@@ -64,7 +102,7 @@ class TabRepository(private val tabDao: TabDao) {
 
     fun getTab(id: String): Observable<Tab> {
         return loadTabFromCache(id)
-            .doOnNext { if(!it.loaded) fetchTab(id).subscribe() }
+            .doOnNext { if (!it.loaded) fetchTab(id).subscribe() }
             .filter { t -> t.loaded }
     }
 
@@ -90,16 +128,45 @@ class TabRepository(private val tabDao: TabDao) {
         return loadFavoritesFromCache()
     }
 
-    fun addFavorite(id: String): Disposable {
-        return Single.just(tabDao)
-            .subscribeOn(Schedulers.io())
-            .subscribe { tabDao -> tabDao.addFavorite(id) }
+    fun addFavorite(id: String) {
+        doAsync {
+            tabDao.addFavorite(id)
+        }
     }
 
-    fun removeFromFavorites(id: String): Disposable {
-        return Single.just(tabDao)
-            .subscribeOn(Schedulers.io())
-            .subscribe { tabDao -> tabDao.removeFavorite(id) }
+    fun removeFromFavorites(id: String) {
+        doAsync {
+            tabDao.removeFavorite(id)
+        }
+    }
+
+    private fun addToFavoritesApi(id: String) {
+        stahbApi.addFavorite(id).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Logger.d("[TabRepository] Successfully added favorite on server")
+                } else {
+                    Logger.d("[TabRepository] Failed adding favorite on server")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Logger.d("[TabRepository] Failed adding favorite on server")
+            }
+        })
+
+    }
+
+    private fun removeFromFavoritesApi(id: String) {
+        stahbApi.deleteFavorite(id).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Logger.d("[TabRepository] Successfully removed favorite on server")
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Logger.d("[TabRepository] Failed removing favorite on server")
+            }
+        })
     }
 
     private fun loadFavoritesFromApi(): Observable<List<Tab>> {

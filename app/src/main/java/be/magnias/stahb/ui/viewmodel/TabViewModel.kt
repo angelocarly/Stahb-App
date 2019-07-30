@@ -76,11 +76,11 @@ class TabViewModel(id: String) : ViewModel() {
     }
 
     fun addToFavorite() {
-        disposable.add(tabRepository.addFavorite(tabId))
+        tabRepository.addFavorite(tabId)
     }
 
     fun removeFromFavorite() {
-        disposable.add(tabRepository.removeFromFavorites(tabId))
+        tabRepository.removeFromFavorites(tabId)
     }
 
     override fun onCleared() {

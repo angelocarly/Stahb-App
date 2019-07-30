@@ -17,6 +17,7 @@ abstract class TabDao {
         insertAll(tabs)
         insertAll(favorites)
         addFavorites(favorites.map { t -> t._id })
+        setAllTabsUpdated()
     }
 
     @Insert
@@ -40,10 +41,10 @@ abstract class TabDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertAll(tabs: List<Tab>)
 
-    @Query("UPDATE tab_table SET favorite = 1 WHERE _id = :tabId")
+    @Query("UPDATE tab_table SET favorite = 1, favoriteUpdated = 1 WHERE _id = :tabId")
     abstract fun addFavorite(tabId: String)
 
-    @Query("UPDATE tab_table SET favorite = 0 WHERE _id = :tabId")
+    @Query("UPDATE tab_table SET favorite = 0, favoriteUpdated = 1 WHERE _id = :tabId")
     abstract fun removeFavorite(tabId: String)
 
     @Query("UPDATE tab_table SET favorite = 0 WHERE favorite = 1")
@@ -63,4 +64,10 @@ abstract class TabDao {
 
     @Query("SELECT * FROM tab_table WHERE _id = :id AND last_update >= :timeout")
     abstract fun hasTab(id: String, timeout: Int) : Int
+
+    @Query("SELECT * FROM tab_table WHERE favoriteUpdated = 1")
+    abstract fun getAllUpdatedTabs(): Observable<List<Tab>>
+
+    @Query("UPDATE tab_table SET favoriteUpdated = 0")
+    abstract fun setAllTabsUpdated()
 }

@@ -13,6 +13,7 @@ data class Tab (
     var tab: String?,
     var tuning: String?,
     var favorite: Boolean = false,
+    var favoriteUpdated: Boolean = false,
     var last_update: Int,
     var loaded: Boolean = false
 )

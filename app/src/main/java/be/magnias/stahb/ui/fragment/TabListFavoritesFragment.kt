@@ -18,8 +18,8 @@ import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.MainViewModel
 import be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel
 import com.orhanobut.logger.Logger
+import kotlinx.android.synthetic.main.fragment_tab_list.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
-import kotlinx.android.synthetic.main.fragment_tab_list.view.loading_panel
 
 class TabListFavoritesFragment : Fragment() {
 
@@ -32,6 +32,31 @@ class TabListFavoritesFragment : Fragment() {
 
         //Setup viewmodel
         tabFavoritesViewModel = ViewModelProviders.of(this).get(TabListFavoritesViewModel::class.java)
+
+        this.adapter = TabAdapter()
+
+        tabFavoritesViewModel.loadingVisibility.observe(this, Observer {
+            loading_panel.visibility = it
+        })
+
+        tabFavoritesViewModel.getAllFavoriteTabInfo().observe(this, Observer<Resource<List<Tab>>> {
+
+            Logger.d("[Favorites list fragment] Received tabs from viewmodel")
+
+            if (it.status == Status.SUCCESS) {
+
+                if (it.data?.isEmpty()!!) {
+                    tab_list_no_tabs.visibility = View.VISIBLE
+                } else {
+                    tab_list_no_tabs.visibility = View.GONE
+                    adapter.submitList(it.data)
+                }
+                listLoaded = true
+            } else if (it.status == Status.ERROR) {
+                Logger.e("Error occured: ${it.message}")
+                tab_list_error.visibility = View.VISIBLE
+            }
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,31 +67,7 @@ class TabListFavoritesFragment : Fragment() {
         view.recycler_view.setHasFixedSize(true)
 
         //Setup recyclerview adapter
-        this.adapter = TabAdapter()
         view.recycler_view.adapter = adapter
-
-        tabFavoritesViewModel.loadingVisibility.observe(this, Observer {
-            view.loading_panel.visibility = it
-        })
-
-        tabFavoritesViewModel.getAllFavoriteTabInfo().observe(this, Observer<Resource<List<Tab>>> {
-
-            Logger.d("[Favorites list] Received new tabs")
-
-            if (it.status == Status.SUCCESS) {
-
-                if (it.data?.isEmpty()!!) {
-                    view.tab_list_no_tabs.visibility = View.VISIBLE
-                } else {
-                    view.tab_list_no_tabs.visibility = View.GONE
-                    adapter.submitList(it.data)
-                }
-                listLoaded = true
-            } else if (it.status == Status.ERROR) {
-                Logger.e("Error occured: ${it.message}")
-                view.tab_list_error.visibility = View.VISIBLE
-            }
-        })
 
         //Setup clicks
         this.adapter.onItemClick = { tab ->

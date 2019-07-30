@@ -37,6 +37,7 @@ dependencies {
     def retrofit_version = "2.6.0"
     def dagger_version = "2.23.2"
     def rxAndroid_version = "2.1.1"
+    def anko_version = "0.10.8"
 
     // Dagger
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -69,6 +70,9 @@ dependencies {
     // Lifecycle components
     implementation "android.arch.lifecycle:extensions:1.1.1"
     kapt "android.arch.lifecycle:compiler:1.1.1"
+
+    //Anko
+    implementation "org.jetbrains.anko:anko:$anko_version"
 
     // Default implementations
     implementation fileTree(dir: 'libs', include: ['*.jar'])

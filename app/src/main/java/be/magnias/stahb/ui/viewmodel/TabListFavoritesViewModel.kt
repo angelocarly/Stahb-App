@@ -9,9 +9,11 @@ import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.persistence.TabRepository
+import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TabListFavoritesViewModel : ViewModel()
@@ -33,6 +35,7 @@ class TabListFavoritesViewModel : ViewModel()
         App.appComponent.inject(this)
 
         subscription = tabRepository.getFavoriteTabs()
+            .debounce(400, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)
             .doOnSubscribe{onRetrieveTabsStart()}

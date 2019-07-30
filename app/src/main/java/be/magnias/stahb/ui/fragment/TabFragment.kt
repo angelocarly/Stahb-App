@@ -32,21 +32,17 @@ class TabFragment : Fragment() {
 
         //Init viewmodel
         tabViewModel = ViewModelProviders.of(this, TabViewModelFactory(id)).get(TabViewModel::class.java)
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        val view = inflater.inflate(R.layout.fragment_tab, container, false)
 
         //Losding panel visibility
         tabViewModel.getLoadingVisibility().observe(this, Observer {loadingVisible ->
             if(loadingVisible) {
-                view.loading_panel.visibility = View.VISIBLE
-                view.checkbox_favorite.visibility = View.GONE
+                loading_panel.visibility = View.VISIBLE
+                checkbox_favorite.visibility = View.GONE
             }
             else {
-                view.loading_panel.visibility = View.GONE
-                view.checkbox_favorite.visibility = View.VISIBLE
+                loading_panel.visibility = View.GONE
+                checkbox_favorite.visibility = View.VISIBLE
             }
         })
 
@@ -60,12 +56,17 @@ class TabFragment : Fragment() {
                 tab_title.text = title
                 tab_tuning.text = tab.tuning
 
-                view.checkbox_favorite.isChecked = tab.favorite
+                checkbox_favorite.isChecked = tab.favorite
 
             } else if (it.status == Status.ERROR) {
                 tab_error.visibility = View.VISIBLE
             }
         })
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val view = inflater.inflate(R.layout.fragment_tab, container, false)
 
         //Add or remove tab based on favorite button
         view.checkbox_favorite.setOnClickListener {

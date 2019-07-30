@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import be.magnias.stahb.model.*
 import be.magnias.stahb.model.dao.TabDao
 
-@Database(entities = [Tab::class], version = 8, exportSchema = false)
+@Database(entities = [Tab::class], version = 9, exportSchema = false)
 abstract class TabDatabase : RoomDatabase()
 {
 
