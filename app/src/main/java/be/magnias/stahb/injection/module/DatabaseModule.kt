@@ -35,6 +35,12 @@ class DatabaseModule(private val application: Application) {
 
     @Provides
     @Singleton
+    internal fun provideUserRepository(): UserRepository {
+        return UserRepository()
+    }
+
+    @Provides
+    @Singleton
     fun provideApplicationContext(): Context {
         return application
     }

@@ -7,6 +7,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.persistence.TabRepository
+import be.magnias.stahb.persistence.UserService
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -17,6 +18,9 @@ class MainViewModel : ViewModel() {
 
     @Inject
     lateinit var tabRepository: TabRepository
+
+    @Inject
+    lateinit var userService: UserService
 
     private val refreshLoadingVisibility = MutableLiveData<Resource<Boolean>>()
 
@@ -46,6 +50,14 @@ class MainViewModel : ViewModel() {
                     Logger.e(error.message!!)
                 }
             )
+    }
+
+    fun logout() {
+        userService.logout()
+    }
+
+    fun isLoggedIn(): Boolean {
+        return userService.isUserLoggedIn()
     }
 
     override fun onCleared() {

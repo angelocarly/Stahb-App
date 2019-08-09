@@ -68,6 +68,9 @@ abstract class TabDao {
     @Query("SELECT * FROM tab_table WHERE favoriteUpdated = 1")
     abstract fun getAllUpdatedTabs(): Observable<List<Tab>>
 
+    @Query("UPDATE tab_table SET favoriteUpdated = :updated WHERE _id = :tabId")
+    abstract fun setTabUpdated(tabId: String, updated: Boolean)
+
     @Query("UPDATE tab_table SET favoriteUpdated = 0")
     abstract fun setAllTabsUpdated()
 }

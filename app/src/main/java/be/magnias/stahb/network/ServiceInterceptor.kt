@@ -1,14 +1,22 @@
 package be.magnias.stahb.network
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import be.magnias.stahb.App
+import be.magnias.stahb.model.Token
+import be.magnias.stahb.persistence.UserRepository
+import be.magnias.stahb.persistence.UserService
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
 class ServiceInterceptor : Interceptor {
 
-    var token : String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDI0OWQyYmFlMzEwNTA2ZjhjYWQ2YjgiLCJ1c2VybmFtZSI6ImFuZ2VsbyIsImV4cCI6MTU2Nzg2NTc4OSwiaWF0IjoxNTYyNjgxNzg5fQ._S61OCLlN72X5KCmxKd3Y1fZmEMFTsdRfAUH3NQ06C4"
+    @Inject
+    lateinit var userRepository: UserRepository
 
-    fun Token(token: String ) {
-        this.token = token;
+    init {
+        App.appComponent.inject(this)
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -17,9 +25,10 @@ class ServiceInterceptor : Interceptor {
         if(request.header("No-Authentication")==null){
             //val token = getTokenFromSharedPreference();
             //or use Token Function
-            if(!token.isNullOrEmpty())
+            val token = userRepository.getUserToken()
+            if(token != null && !token.token.isNullOrEmpty())
             {
-                val finalToken =  "Bearer "+token
+                val finalToken =  "Bearer "+token.token
                 request = request.newBuilder()
                     .addHeader("Authorization",finalToken)
                     .build()
