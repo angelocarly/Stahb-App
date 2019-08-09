@@ -2,6 +2,7 @@ package be.magnias.stahb.injection.module
 
 import be.magnias.stahb.network.ServiceInterceptor
 import be.magnias.stahb.network.StahbApi
+import be.magnias.stahb.persistence.UserService
 import be.magnias.stahb.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -11,6 +12,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 /**
  * Module which provides all required dependencies about network
@@ -34,6 +36,7 @@ class NetworkModule {
      * @return the Retrofit object
      */
     @Provides
+    @Singleton
     internal fun provideRetrofitInterface(): Retrofit {
         var client = OkHttpClient.Builder()
             .addInterceptor(ServiceInterceptor())
@@ -47,5 +50,11 @@ class NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideUserService(): UserService {
+        return UserService()
     }
 }

@@ -1,14 +1,15 @@
 package be.magnias.stahb.injection.component
 
 import be.magnias.stahb.App
+import be.magnias.stahb.adapter.TabListPagerAdapter
 import be.magnias.stahb.injection.module.DatabaseModule
 import be.magnias.stahb.injection.module.NetworkModule
+import be.magnias.stahb.network.ServiceInterceptor
 import be.magnias.stahb.persistence.TabRepository
-import be.magnias.stahb.ui.viewmodel.MainViewModel
-import be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel
+import be.magnias.stahb.persistence.UserRepository
+import be.magnias.stahb.persistence.UserService
+import be.magnias.stahb.ui.viewmodel.*
 import dagger.Component
-import be.magnias.stahb.ui.viewmodel.TabListViewModel
-import be.magnias.stahb.ui.viewmodel.TabViewModel
 import javax.inject.Singleton
 
 /**
@@ -27,6 +28,12 @@ interface AppComponent {
     fun inject(tabListFavoritesViewModel: TabListFavoritesViewModel)
     fun inject(tabRepository: TabRepository)
     fun inject(mainViewModel: MainViewModel)
+    fun inject(loginViewModel: LoginViewModel)
+    fun inject(userService: UserService)
+    fun inject(serviceInterceptor: ServiceInterceptor)
+    fun inject(userRepository: UserRepository)
+    fun inject(tabListPagerAdapter: TabListPagerAdapter)
+    fun inject(tabOverviewViewModel: TabOverviewViewModel)
 
     @Component.Builder
     interface Builder {

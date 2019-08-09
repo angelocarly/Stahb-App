@@ -1,6 +1,7 @@
 package be.magnias.stahb.network
 
 import be.magnias.stahb.model.Tab
+import be.magnias.stahb.model.Token
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.*
@@ -26,4 +27,8 @@ interface StahbApi {
 
     @DELETE("user/fav/{id}")
     fun deleteFavorite(@Path("id") id: String): Call<Void>
+
+    @POST("/user/login")
+    @FormUrlEncoded
+    fun login(@Field("username") username: String, @Field("password") password: String): Call<Token>
 }

@@ -33,7 +33,7 @@ class TabListViewModel : ViewModel() {
         App.appComponent.inject(this)
 
         subscription = tabRepository.getAllTabs()
-            .debounce(400, TimeUnit.MILLISECONDS)
+            .debounce(700, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)
             .doOnSubscribe { onRetrieveTabsStart() }

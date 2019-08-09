@@ -3,15 +3,22 @@ package be.magnias.stahb.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import be.magnias.stahb.App
+import be.magnias.stahb.persistence.TabRepository
+import be.magnias.stahb.persistence.UserRepository
+import be.magnias.stahb.persistence.UserService
 import be.magnias.stahb.ui.fragment.TabListFavoritesFragment
 import be.magnias.stahb.ui.fragment.TabListFragment
+import javax.inject.Inject
 
 class TabListPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
-    override fun getCount(): Int  = 2
+    override fun getCount(): Int {
+        return 2
+    }
 
     override fun getItem(i: Int): Fragment {
-        if(i == 0) return TabListFragment()
+        if (i == 0) return TabListFragment()
         return TabListFavoritesFragment()
 //        val fragment = TabFragment()
 //        fragment.arguments = Bundle().apply {
@@ -20,7 +27,7 @@ class TabListPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        if(position == 0) return "New"
+        if (position == 0) return "New"
         else return "Favorites"
     }
 }

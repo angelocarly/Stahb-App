@@ -24,12 +24,19 @@ class TabRepository(private val tabDao: TabDao) {
     @Inject
     lateinit var stahbApi: StahbApi
 
+    @Inject
+    lateinit var userRepository: UserRepository
+
     init {
         App.appComponent.inject(this)
     }
 
 
     fun push(): Observable<Boolean> {
+        if(!userRepository.isUserLoggedIn()) {
+            return Observable.empty()
+        }
+
         var tabs : List<Tab>? = null
         return tabDao.getAllUpdatedTabs().firstOrError()
             .doOnSuccess {
@@ -46,7 +53,7 @@ class TabRepository(private val tabDao: TabDao) {
                         stahbApi.deleteFavorite(t._id).execute()
                     }
                 }
-                Logger.w("Updated push")
+                tabDao.setAllTabsUpdated()
             }
     }
 
@@ -57,6 +64,7 @@ class TabRepository(private val tabDao: TabDao) {
             loadFavoritesFromApi()
                 .singleOrError()
                 .toObservable()
+                .onErrorResumeNext(Observable.empty())
                 .subscribeOn(Schedulers.io()),
             loadTabsFromApi()
                 .singleOrError()
@@ -65,7 +73,6 @@ class TabRepository(private val tabDao: TabDao) {
                 .subscribeOn(Schedulers.io()),
             BiFunction { favorites: List<Tab>, tabs: List<Tab> ->
                 tabDao.updateAll(favorites, tabs)
-                Logger.w("Updated fetch")
             }
         )
             .map { true }
@@ -171,6 +178,10 @@ class TabRepository(private val tabDao: TabDao) {
 
     private fun loadFavoritesFromApi(): Observable<List<Tab>> {
         //Load tabs from network
+        if(!userRepository.isUserLoggedIn()) {
+            return Observable.empty()
+        }
+
         return stahbApi.getFavorites()
     }
 

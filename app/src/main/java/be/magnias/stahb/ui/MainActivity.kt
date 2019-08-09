@@ -7,12 +7,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import be.magnias.stahb.R
 import be.magnias.stahb.model.Status
+import be.magnias.stahb.ui.fragment.LoginFragment
 import be.magnias.stahb.ui.fragment.TabFragment
-import be.magnias.stahb.ui.fragment.TabListPagerFragment
+import be.magnias.stahb.ui.fragment.TabOverviewFragment
 import be.magnias.stahb.ui.viewmodel.MainViewModel
 import com.orhanobut.logger.Logger
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_tab_list.view.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         //Setup fragment
         if (savedInstanceState == null) {
-            val fragment = TabListPagerFragment.newInstance()
+            val fragment = TabOverviewFragment.newInstance()
             supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
@@ -51,6 +50,19 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack("tabs")
             .replace(R.id.fragment_container, fragment)
             .commit()
+    }
+
+    fun showLogin() {
+        val fragment = LoginFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .addToBackStack("login")
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    fun logout() {
+        viewModel.logout()
     }
 
     fun refreshTabs() {
