@@ -34,6 +34,7 @@ interface AppComponent {
     fun inject(userRepository: UserRepository)
     fun inject(tabListPagerAdapter: TabListPagerAdapter)
     fun inject(tabOverviewViewModel: TabOverviewViewModel)
+    fun inject(registerViewModel: RegisterViewModel)
 
     @Component.Builder
     interface Builder {

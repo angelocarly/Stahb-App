@@ -1,34 +1,30 @@
 package be.magnias.stahb.ui.fragment
 
-import androidx.fragment.app.Fragment
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+
 import be.magnias.stahb.R
 import be.magnias.stahb.model.Status
-import be.magnias.stahb.ui.MainActivity
-import be.magnias.stahb.ui.viewmodel.LoginViewModel
-import com.orhanobut.logger.Logger
-import kotlinx.android.synthetic.main.fragment_login.*
-import kotlinx.android.synthetic.main.fragment_login.view.*
+import be.magnias.stahb.ui.viewmodel.RegisterViewModel
+import kotlinx.android.synthetic.main.fragment_register.*
+import kotlinx.android.synthetic.main.fragment_register.view.*
 
-/**
- * A placeholder fragment containing a simple view.
- */
-class LoginFragment : Fragment() {
+class RegisterFragment : Fragment() {
 
-    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var registerViewModel: RegisterViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //Init viewmodel
-        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
 
-        loginViewModel.getLoginResult().observe(this, Observer {
+        registerViewModel.getRegisterResult().observe(this, Observer {
             if (it.status == Status.ERROR) {
                 text_view_error.text = it.message
                 text_view_error.visibility = View.VISIBLE
@@ -38,26 +34,32 @@ class LoginFragment : Fragment() {
             }
         })
 
-        loginViewModel.getLoadingVisibility().observe(this, Observer {
-            if(it) {
+        registerViewModel.getLoadingVisibility().observe(this, Observer {
+            if (it) {
                 //Show the loading bar
                 loading_panel.visibility = View.VISIBLE
-                button_login.visibility = View.GONE
+                button_register.visibility = View.GONE
                 text_view_error.visibility = View.GONE
             } else {
                 //Dont show the loading bar
                 loading_panel.visibility = View.GONE
-                button_login.visibility = View.VISIBLE
+                button_register.visibility = View.VISIBLE
             }
         })
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_register, container, false)
 
-        view.button_login.setOnClickListener {
+        view.button_register.setOnClickListener {
+
             val usernameText = view.textinput_username.text.toString()
             val passwordText = view.textinput_password.text.toString()
+            val repeatPasswordText = view.textinput_repeatpassword.text.toString()
 
             //Verify the input
             var errors = false
@@ -69,14 +71,19 @@ class LoginFragment : Fragment() {
                 textinput_password.error = "Password can't be blank"
                 errors = true
             }
+            if (repeatPasswordText.isNullOrBlank()) {
+                textinput_repeatpassword.error = "Repeat Password can't be blank"
+                errors = true
+            }
+            if (passwordText != repeatPasswordText) {
+                textinput_repeatpassword.error = "Passwords do not match"
+                errors = true
+            }
 
-            //Log the user in
-            if (!errors) loginViewModel.login(usernameText, passwordText)
-        }
-
-        view.button_register.setOnClickListener {
-            Logger.d("Showing register fragment")
-            (activity as MainActivity).showRegister()
+            if (!errors) registerViewModel.register(
+                usernameText,
+                passwordText
+            )
         }
 
         return view
@@ -84,8 +91,8 @@ class LoginFragment : Fragment() {
 
     //Instance method
     companion object {
-        fun newInstance(): LoginFragment {
-            return LoginFragment()
+        fun newInstance(): RegisterFragment {
+            return RegisterFragment()
         }
     }
 }

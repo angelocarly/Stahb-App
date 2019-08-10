@@ -31,4 +31,8 @@ interface StahbApi {
     @POST("/user/login")
     @FormUrlEncoded
     fun login(@Field("username") username: String, @Field("password") password: String): Call<Token>
+
+    @POST("/user/register")
+    @FormUrlEncoded
+    fun register(@Field("username") username: String, @Field("password") password: String): Call<Token>
 }

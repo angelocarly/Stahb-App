@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import be.magnias.stahb.R
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.ui.fragment.LoginFragment
+import be.magnias.stahb.ui.fragment.RegisterFragment
 import be.magnias.stahb.ui.fragment.TabFragment
 import be.magnias.stahb.ui.fragment.TabOverviewFragment
 import be.magnias.stahb.ui.viewmodel.MainViewModel
@@ -56,7 +57,16 @@ class MainActivity : AppCompatActivity() {
         val fragment = LoginFragment.newInstance()
         supportFragmentManager
             .beginTransaction()
-            .addToBackStack("login")
+            .addToBackStack("register")
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    fun showRegister() {
+        val fragment = RegisterFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .addToBackStack("register")
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
