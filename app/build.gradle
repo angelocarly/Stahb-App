@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'org.jetbrains.dokka-android'
+
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -27,17 +29,7 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
-}
-
 dependencies {
-    def lifecycle_version = "2.0.0"
-    def room_version = "2.1.0"
-    def retrofit_version = "2.6.0"
-    def dagger_version = "2.23.2"
-    def rxAndroid_version = "2.1.1"
-    def anko_version = "0.10.8"
 
     // Dagger
     implementation "com.google.dagger:dagger:$dagger_version"

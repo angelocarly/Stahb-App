@@ -7,7 +7,7 @@ import be.magnias.stahb.injection.module.NetworkModule
 import be.magnias.stahb.network.ServiceInterceptor
 import be.magnias.stahb.persistence.TabRepository
 import be.magnias.stahb.persistence.UserRepository
-import be.magnias.stahb.persistence.UserService
+import be.magnias.stahb.service.UserService
 import be.magnias.stahb.ui.viewmodel.*
 import dagger.Component
 import javax.inject.Singleton

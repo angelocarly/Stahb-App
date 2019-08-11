@@ -1,12 +1,12 @@
-package be.magnias.stahb.persistence
+package be.magnias.stahb.service
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import be.magnias.stahb.App
 import be.magnias.stahb.error.BadRequestException
 import be.magnias.stahb.error.UnAuthorizedException
 import be.magnias.stahb.model.Token
 import be.magnias.stahb.network.StahbApi
+import be.magnias.stahb.persistence.TabRepository
+import be.magnias.stahb.persistence.UserRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -14,9 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 class UserService {

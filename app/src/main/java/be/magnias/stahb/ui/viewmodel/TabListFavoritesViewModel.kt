@@ -16,24 +16,35 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+/**
+ * ViewModel for the TabListFavorites Fragment.
+ * Provides a way for the UI to receive the favorite tabs.
+ */
 class TabListFavoritesViewModel : ViewModel()
 {
 
     @Inject
     lateinit var tabRepository: TabRepository
 
+    /**
+     * Provides the loaded tabs
+     */
     private var allTabs: MutableLiveData<Resource<List<Tab>>> = MutableLiveData()
-
     /**
      * Indicates whether the loading view should be displayed.
      */
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
+    /**
+     * Disposable to dispose of requests
+     */
     private var subscription: Disposable
 
     init{
+        // Inject services with Dagger
         App.appComponent.inject(this)
 
+        // Load the tabs
         subscription = tabRepository.getFavoriteTabs()
             .debounce(700, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
@@ -46,18 +57,22 @@ class TabListFavoritesViewModel : ViewModel()
     }
 
     private fun onRetrieveTabsStart() {
+        // Set the loading status to Loading
         loadingVisibility.value = View.VISIBLE
     }
 
     private fun onRetrieveTabsFinish() {
+        // Set the loading status to Not Loading
         loadingVisibility.value = View.GONE
     }
 
     private fun onRetrieveTabsSuccess(tabs : List<Tab>){
+        // Set the result to a Success Status
         allTabs.value = Resource(Status.SUCCESS, tabs, null)
     }
 
     private fun onRetrieveTabsError(e: Throwable){
+        // Set the result to an Error Status
         allTabs.value = Resource<List<Tab>>(Status.ERROR, null, e.message)
     }
 
@@ -67,6 +82,8 @@ class TabListFavoritesViewModel : ViewModel()
 
     override fun onCleared() {
         super.onCleared()
+
+        //Dispose of the request
         subscription.dispose()
     }
 }

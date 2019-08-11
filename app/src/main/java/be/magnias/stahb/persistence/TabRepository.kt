@@ -1,17 +1,11 @@
 package be.magnias.stahb.persistence
 
-import android.os.AsyncTask
-import android.util.Log
-import androidx.annotation.WorkerThread
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.model.dao.TabDao
 import be.magnias.stahb.network.StahbApi
 import com.orhanobut.logger.Logger
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
