@@ -61,7 +61,7 @@ class TabService(private val tabDao: TabDao) {
                         stahbApi.deleteFavorite(t._id).execute()
                     }
                 }
-                tabDao.setAllTabsUpdated()
+                tabDao.setAllTabsFresh()
             }
     }
 
@@ -70,23 +70,33 @@ class TabService(private val tabDao: TabDao) {
      */
     fun fetch(): Observable<Boolean> {
         //Refresh the data in the cache
-        //Fetches the favorites and new tabs from the api, update the cache when both are loaded
-        return Observable.combineLatest(
-            loadFavoritesFromApi()
+        if (userRepository.isUserLoggedIn()) {
+            //Fetches the favorites and new tabs from the api, update the cache when both are loaded
+            return Observable.combineLatest(
+                loadFavoritesFromApi()
+                    .singleOrError()
+                    .toObservable()
+                    .subscribeOn(Schedulers.io()),
+                loadTabsFromApi()
+                    .singleOrError()
+                    .toObservable()
+                    .subscribeOn(Schedulers.io()),
+                BiFunction { favorites: List<Tab>, tabs: List<Tab> ->
+                    tabDao.updateAll(favorites, tabs)
+                }
+            )
+                .map { true }
+        } else {
+            // Only load the new list when user is not logged in
+            return loadTabsFromApi()
                 .singleOrError()
                 .toObservable()
-                .onErrorResumeNext(Observable.empty())
-                .subscribeOn(Schedulers.io()),
-            loadTabsFromApi()
-                .singleOrError()
-                .toObservable()
-                .onErrorResumeNext(Observable.empty())
-                .subscribeOn(Schedulers.io()),
-            BiFunction { favorites: List<Tab>, tabs: List<Tab> ->
-                tabDao.updateAll(favorites, tabs)
-            }
-        )
-            .map { true }
+                .subscribeOn(Schedulers.io())
+                .doOnNext {
+                    tabDao.updateAll(it)
+                }
+                .map { true }
+        }
     }
 
     /**

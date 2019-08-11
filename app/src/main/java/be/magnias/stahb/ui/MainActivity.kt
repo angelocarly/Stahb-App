@@ -27,14 +27,14 @@ class MainActivity : AppCompatActivity() {
         // Initialize viewModel
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        //Display toast error message on refresh failure
+        // Display toast error message on refresh failure
         viewModel.getRefreshLoadingVisibility().observe(this, Observer { r ->
             if (r.status == Status.ERROR) {
                 Toast.makeText(applicationContext, r.message, Toast.LENGTH_LONG).show()
             }
         })
 
-        //Set the TabOverviewFragment as content
+        // Set the TabOverviewFragment as content
         if (savedInstanceState == null) {
             val fragment = TabOverviewFragment.newInstance()
             supportFragmentManager
@@ -42,6 +42,15 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, fragment)
                 .commit()
         }
+
+        // Show toast on failed load
+        viewModel.getRefreshLoadingVisibility().observe(this, Observer {
+            if(it.status == Status.ERROR) {
+                Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
+            } else if (it?.data == true) {
+                Toast.makeText(applicationContext, "Refreshed tabs!", Toast.LENGTH_LONG).show()
+            }
+        })
 
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import be.magnias.stahb.R
@@ -50,6 +51,8 @@ class LoginFragment : Fragment() {
                 text_view_error.text = it.message
                 text_view_error.visibility = View.VISIBLE
             } else if (it.status == Status.SUCCESS) {
+                Toast.makeText(context, "Succesfully logged in!", Toast.LENGTH_LONG).show()
+
                 //Leave the register fragment
                 activity!!.supportFragmentManager.popBackStackImmediate()
             }
@@ -80,7 +83,7 @@ class LoginFragment : Fragment() {
             if (!errors) loginViewModel.login(usernameText, passwordText)
         }
 
-        // Register button listener
+        // Login button listener
         view.button_register.setOnClickListener {
             Logger.d("Showing register fragment")
             (activity as MainActivity).showRegister()

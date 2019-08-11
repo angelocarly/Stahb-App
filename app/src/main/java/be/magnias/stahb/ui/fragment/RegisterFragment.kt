@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 
@@ -49,6 +50,8 @@ class RegisterFragment : Fragment() {
                 text_view_error.text = it.message
                 text_view_error.visibility = View.VISIBLE
             } else if (it.status == Status.SUCCESS) {
+                Toast.makeText(context, "Succesfully registered!", Toast.LENGTH_LONG).show()
+
                 // Leave the register fragment
                 activity!!.supportFragmentManager.popBackStackImmediate()
             }

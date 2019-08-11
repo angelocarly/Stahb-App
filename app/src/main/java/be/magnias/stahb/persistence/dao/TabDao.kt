@@ -47,6 +47,18 @@ abstract class TabDao {
 
     /**
      * Replace the entire database.
+     * Still keeps the cache stored.
+     */
+    @Transaction
+    open fun updateAll(tabs: List<Tab>) {
+        Logger.d("Updating database")
+        deleteNotInList(tabs.map { tab -> tab._id })
+        insertAll(tabs)
+        setAllTabsFresh()
+    }
+
+    /**
+     * Replace the entire database.
      */
     @Transaction
     open fun updateAll(favorites: List<Tab>, tabs: List<Tab>) {
@@ -55,14 +67,14 @@ abstract class TabDao {
         insertAll(tabs)
         insertAll(favorites)
         addFavorites(favorites.map { t -> t._id })
-        setAllTabsUpdated()
+        setAllTabsFresh()
     }
 
     @Query("UPDATE tab_table SET favoriteUpdated = :updated WHERE _id = :tabId")
     abstract fun setTabUpdated(tabId: String, updated: Boolean)
 
     @Query("UPDATE tab_table SET favoriteUpdated = 0")
-    abstract fun setAllTabsUpdated()
+    abstract fun setAllTabsFresh()
 
     @Query("UPDATE tab_table SET favorite = 1, favoriteUpdated = 1 WHERE _id = :tabId")
     abstract fun addFavorite(tabId: String)
@@ -82,5 +94,8 @@ abstract class TabDao {
 
     @Query("DELETE FROM tab_table")
     abstract fun deleteAll()
+
+    @Query("DELETE FROM tab_table WHERE _id NOT IN (:tabs)")
+    abstract fun deleteNotInList(tabs: List<String>)
 
 }
