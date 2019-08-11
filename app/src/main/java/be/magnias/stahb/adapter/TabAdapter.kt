@@ -11,9 +11,15 @@ import be.magnias.stahb.R
 import be.magnias.stahb.model.Tab
 import kotlinx.android.synthetic.main.tab_item.view.*
 
-
+/**
+ * TabAdapter for a recyclerView
+ * Fills a list with general info of the tabs.
+ */
 class TabAdapter : ListAdapter<Tab, TabAdapter.ViewHolder>(DIFF_CALLBACK) {
 
+    /**
+     * Provides item indexing for the Adapter.
+     */
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Tab>() {
             override fun areItemsTheSame(oldItem: Tab, newItem: Tab): Boolean {
@@ -21,11 +27,14 @@ class TabAdapter : ListAdapter<Tab, TabAdapter.ViewHolder>(DIFF_CALLBACK) {
             }
 
             override fun areContentsTheSame(oldItem: Tab, newItem: Tab): Boolean {
-                return oldItem.artist == newItem.artist && oldItem.song == newItem.song
+                return oldItem.artist == newItem.artist && oldItem.song == newItem.song && oldItem._id == newItem._id
             }
         }
     }
 
+    /**
+     * Unit to listen to any clicked entry
+     */
     var onItemClick: ((Tab) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,12 +45,16 @@ class TabAdapter : ListAdapter<Tab, TabAdapter.ViewHolder>(DIFF_CALLBACK) {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentTab: Tab = getItem(position)
 
+        // Set the data of a single tab entry
         holder.textViewArtist.text = currentTab.artist
         holder.textViewSong.text = currentTab.song
         if(currentTab.loaded) holder.textViewCached.visibility = View.VISIBLE
         else holder.textViewCached.visibility = View.GONE
     }
 
+    /**
+     * ViewHolder to store the data used in each Tab entry
+     */
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var textViewArtist: TextView = itemView.text_view_artist
@@ -49,6 +62,7 @@ class TabAdapter : ListAdapter<Tab, TabAdapter.ViewHolder>(DIFF_CALLBACK) {
         var textViewCached: TextView = itemView.text_view_cached
 
         init {
+            // Invoke the onItemClick Unit when this entry is clicked
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {

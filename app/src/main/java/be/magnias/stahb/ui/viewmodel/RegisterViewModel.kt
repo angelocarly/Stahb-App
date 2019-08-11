@@ -79,7 +79,7 @@ class RegisterViewModel : ViewModel() {
         disposable.add(userService.register(username, password)
             .doOnSubscribe { onRegisterStart() }
             .subscribe(
-                { res -> onRegisterSuccess(); onRegisterFinish() },
+                { onRegisterSuccess(); onRegisterFinish() },
                 { error -> onRegisterError(error); onRegisterFinish() }
             )
         )

@@ -9,15 +9,24 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 
+/**
+ * Starting point of the application
+ */
 class App : Application() {
+
     companion object {
+        /**
+         * Public Dagger AppComponent.
+         * Is used to inject services.
+         */
         lateinit var appComponent: AppComponent
     }
+
     override fun onCreate() {
 
         super.onCreate()
 
-        //Setup logging
+        // Setup Orhanobut logging
         val formatStrategy = PrettyFormatStrategy.newBuilder()
             .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
             .methodCount(2)         // (Optional) How many method line to show. Default 2
@@ -26,6 +35,7 @@ class App : Application() {
             .build()
         Logger.addLogAdapter(AndroidLogAdapter(formatStrategy))
 
+        // Initialize appcomponent
         appComponent = DaggerAppComponent
             .builder()
             .databaseModule(DatabaseModule(this))
