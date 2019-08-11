@@ -2,6 +2,7 @@ package be.magnias.stahb.ui.fragment
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -59,6 +60,16 @@ class TabOverviewFragment : Fragment() {
             onOptionsItemSelected(it)
         }
 
+        if (viewModel.isUserLoggedIn()) {
+            // Show the login option
+            view.toolbar.menu.setGroupVisible(R.id.group_loggedIn, true)
+            view.toolbar.menu.setGroupVisible(R.id.group_loggedOut, false)
+        } else {
+            // Show the logout option
+            view.toolbar.menu.setGroupVisible(R.id.group_loggedIn, false)
+            view.toolbar.menu.setGroupVisible(R.id.group_loggedOut, true)
+        }
+
         return view
     }
 
@@ -88,6 +99,7 @@ class TabOverviewFragment : Fragment() {
                 true
             }
             R.id.action_logout -> {
+                Toast.makeText(context, "Logged out!", Toast.LENGTH_LONG).show()
                 (activity as MainActivity).logout()
                 true
             }

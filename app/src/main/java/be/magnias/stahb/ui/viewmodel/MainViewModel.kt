@@ -10,6 +10,7 @@ import be.magnias.stahb.service.TabService
 import be.magnias.stahb.service.UserService
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -34,13 +35,16 @@ class MainViewModel : ViewModel() {
     /**
      * Disposable to dispose of requests
      */
-    private var refreshSubscription: Disposable? = null
+    private var refreshSubscription: CompositeDisposable = CompositeDisposable()
 
     init {
         // Inject services with Dagger
         App.appComponent.inject(this)
     }
 
+    /**
+     * @return a livedata object which shows when the data is loaded or an error occurred.
+     */
     fun getRefreshLoadingVisibility(): LiveData<Resource<Boolean>> {
         return refreshLoadingVisibility
     }
@@ -49,21 +53,25 @@ class MainViewModel : ViewModel() {
      * Refresh the available tabs with their latest online version.
      */
     fun refreshTabs() {
-        if(refreshSubscription != null) refreshSubscription!!.dispose()
-        refreshSubscription = tabService.refresh()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnTerminate {
-                refreshLoadingVisibility.value = Resource(Status.SUCCESS, true, null)
-                Logger.d("Refreshed tabs")
-            }
-            .subscribe(
-                { },
-                { error ->
-                    refreshLoadingVisibility.value = Resource(Status.ERROR, true, error.message)
-                    Logger.e(error.message!!)
+        refreshSubscription.clear()
+        refreshSubscription.add(
+            tabService.refresh()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnTerminate {
+                    refreshLoadingVisibility.value = Resource(Status.SUCCESS, true, null)
+                    Logger.d("Refreshed tabs")
                 }
-            )
+                .doOnError {
+                    refreshLoadingVisibility.value = Resource(Status.ERROR, true, it.message)
+                }
+                .subscribe(
+                    { },
+                    { error ->
+                        Logger.e(error.message!!)
+                    }
+                )
+        )
     }
 
     /**
@@ -76,6 +84,6 @@ class MainViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         // Dispose of any requests
-        if(refreshSubscription != null) refreshSubscription!!.dispose()
+        refreshSubscription.dispose()
     }
 }

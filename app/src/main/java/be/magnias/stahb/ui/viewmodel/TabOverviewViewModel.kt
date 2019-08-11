@@ -42,6 +42,10 @@ class TabOverviewViewModel : ViewModel() {
         }
     }
 
+    fun isUserLoggedIn(): Boolean {
+        return userService.isUserLoggedIn()
+    }
+
     fun getUserLoggedIn(): LiveData<Boolean> {
         return isUserLoggedIn
     }
