@@ -3,31 +3,48 @@ package be.magnias.stahb.persistence
 import android.content.Context
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Token
-import com.orhanobut.logger.Logger
 import org.jetbrains.anko.defaultSharedPreferences
 import javax.inject.Inject
 
+/**
+ * Repository for User data.
+ */
 class UserRepository {
 
-    private lateinit var userToken: Token
+    /**
+     * In memory cache of the user's token.
+     */
+    private var userToken: Token
 
     @Inject
     lateinit var context: Context
 
     init {
+        // Inject context with Dagger.
         App.appComponent.inject(this)
 
+        // Load the saved token or null in memory when the app starts.
         this.userToken = Token(context.defaultSharedPreferences.getString("userToken", null))
     }
 
-    fun saveUserToken(userToken: Token?) {
-        if (userToken == null) {
-            this.userToken = Token(null)
-            context.defaultSharedPreferences.edit().putString("userToken", null).apply()
-        } else {
-            this.userToken = userToken
-            context.defaultSharedPreferences.edit().putString("userToken", userToken?.token).apply()
-        }
+    /**
+     * Persist a user token.
+     * @param userToken The userToken or null
+     */
+    fun saveUserToken(userToken: Token) {
+        // Store the token
+        this.userToken = userToken
+        context.defaultSharedPreferences.edit().putString("userToken", userToken.token).apply()
+
+    }
+
+    /**
+     * Remove a user token.
+     */
+    fun removeUserToken() {
+        // Clear the token in memory and shared preferences.
+        this.userToken = Token(null)
+        context.defaultSharedPreferences.edit().putString("userToken", null).apply()
     }
 
     fun getUserToken(): Token {

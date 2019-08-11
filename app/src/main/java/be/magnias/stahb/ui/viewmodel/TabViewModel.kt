@@ -7,7 +7,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.persistence.TabRepository
+import be.magnias.stahb.service.TabService
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -25,7 +25,7 @@ class TabViewModel(id: String) : ViewModel() {
     private val tabId = id
 
     @Inject
-    lateinit var tabRepository: TabRepository
+    lateinit var tabService: TabService
 
     /**
      * Provides the tab
@@ -48,7 +48,7 @@ class TabViewModel(id: String) : ViewModel() {
 
         // Get the tab
         disposable.add(
-            tabRepository.getTab(id)
+            tabService.getTab(id)
                 .observeOn(AndroidSchedulers.mainThread(), true)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { onRetrieveTabStart() }
@@ -93,14 +93,14 @@ class TabViewModel(id: String) : ViewModel() {
      * Add the current tab to the user's favorites.
      */
     fun addToFavorite() {
-        tabRepository.addFavorite(tabId)
+        tabService.addFavorite(tabId)
     }
 
     /**
      * Remove the current tab from the user's favorites.
      */
     fun removeFromFavorite() {
-        tabRepository.removeFromFavorites(tabId)
+        tabService.removeFromFavorites(tabId)
     }
 
     override fun onCleared() {

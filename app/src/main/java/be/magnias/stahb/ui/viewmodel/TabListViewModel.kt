@@ -8,8 +8,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.persistence.TabRepository
-import com.orhanobut.logger.Logger
+import be.magnias.stahb.service.TabService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class TabListViewModel : ViewModel() {
 
     @Inject
-    lateinit var tabRepository: TabRepository
+    lateinit var tabService: TabService
 
     /**
      * Provides the loaded tabs
@@ -45,7 +44,7 @@ class TabListViewModel : ViewModel() {
         App.appComponent.inject(this)
 
         // Load the tabs
-        subscription = tabRepository.getAllTabs()
+        subscription = tabService.getAllTabs()
             .debounce(700, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread(), true)

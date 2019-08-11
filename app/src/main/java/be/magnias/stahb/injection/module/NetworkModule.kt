@@ -14,12 +14,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
- * Module which provides all required dependencies about network
+ * Module which provides all required dependencies about networking
  */
 @Module
-// Safe here as we are dealing with a Dagger 2 module
-@Suppress("unused")
 class NetworkModule {
+
     /**
      * Provides the Stahb service implementation.
      * @param retrofit the Retrofit object used to instantiate the service
@@ -37,7 +36,7 @@ class NetworkModule {
     @Provides
     @Singleton
     internal fun provideRetrofitInterface(): Retrofit {
-        var client = OkHttpClient.Builder()
+        val client = OkHttpClient.Builder()
             .addInterceptor(ServiceInterceptor())
             //.readTimeout(45,TimeUnit.SECONDS)
             //.writeTimeout(45,TimeUnit.SECONDS)

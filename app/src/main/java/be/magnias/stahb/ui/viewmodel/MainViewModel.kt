@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
-import be.magnias.stahb.persistence.TabRepository
+import be.magnias.stahb.service.TabService
 import be.magnias.stahb.service.UserService
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class MainViewModel : ViewModel() {
 
     @Inject
-    lateinit var tabRepository: TabRepository
+    lateinit var tabService: TabService
 
     @Inject
     lateinit var userService: UserService
@@ -50,7 +50,7 @@ class MainViewModel : ViewModel() {
      */
     fun refreshTabs() {
         if(refreshSubscription != null) refreshSubscription!!.dispose()
-        refreshSubscription = tabRepository.refresh()
+        refreshSubscription = tabService.refresh()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnTerminate {
