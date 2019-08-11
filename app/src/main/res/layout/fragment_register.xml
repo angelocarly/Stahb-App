@@ -24,7 +24,7 @@
 
         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
                                                                android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
@@ -48,6 +48,18 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                               android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Repeat Password"
+                    android:inputType="textPassword"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:id="@+id/textinput_repeatpassword"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Loading screen -->
         <RelativeLayout
@@ -67,19 +79,8 @@
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_login"
-                android:text="Login"
-                android:clickable="true"/>
-
-
-        <TextView
-                android:text="No account yet? Click here to register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:clickable="true"
-                android:focusable="true"
-                android:id="@+id/button_register"/>
+                android:id="@+id/button_register"
+                android:text="Register"/>
 
     </LinearLayout>
 

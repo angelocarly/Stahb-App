@@ -36,7 +36,7 @@ class UserService {
         App.appComponent.inject(this)
 
         loggedInSubject.onNext(isUserLoggedIn())
-     }
+    }
 
     //Get token
     fun getUserToken(): Token? {
@@ -60,7 +60,7 @@ class UserService {
     fun login(username: String, password: String): Single<Boolean> {
 
         return Observable.create<Boolean> {
-            val res = stahbApi.login(username,password).execute()
+            val res = stahbApi.login(username, password).execute()
             if (!res.isSuccessful) {
                 when (res.code()) {
                     401 -> {
@@ -84,10 +84,29 @@ class UserService {
             .singleOrError()
     }
 
+    fun register(username: String, password: String): Single<Boolean> {
+        return Observable.create<Boolean> {
+            val res = stahbApi.register(username, password).execute()
+            if (!res.isSuccessful) {
+                Logger.d("Failed registering")
+                throw BadRequestException()
+            } else {
+                //Register success
+
+                //Return a value to mark success
+                it.onNext(true)
+            }
+            it.onComplete()
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .singleOrError()
+    }
+
     //Save a new token in the repository
     private fun saveLogin(userToken: Token?) {
         //If another user is still logged in, push his updates first
-        if(isUserLoggedIn()) {
+        if (isUserLoggedIn()) {
             tabRepository.push()
                 .doOnComplete {
                     //Save the token
