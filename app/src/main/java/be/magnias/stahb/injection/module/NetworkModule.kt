@@ -2,11 +2,10 @@ package be.magnias.stahb.injection.module
 
 import be.magnias.stahb.network.ServiceInterceptor
 import be.magnias.stahb.network.StahbApi
-import be.magnias.stahb.persistence.UserService
+import be.magnias.stahb.service.UserService
 import be.magnias.stahb.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

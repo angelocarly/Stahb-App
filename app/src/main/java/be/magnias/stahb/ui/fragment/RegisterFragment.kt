@@ -14,6 +14,10 @@ import be.magnias.stahb.ui.viewmodel.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.android.synthetic.main.fragment_register.view.*
 
+/**
+ * The register fragment.
+ * In this fragment a user is requested to register a new account using a username and a password.
+ */
 class RegisterFragment : Fragment() {
 
     private lateinit var registerViewModel: RegisterViewModel
@@ -21,19 +25,10 @@ class RegisterFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Init viewmodel
+        // Init viewmodel
         registerViewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
 
-        registerViewModel.getRegisterResult().observe(this, Observer {
-            if (it.status == Status.ERROR) {
-                text_view_error.text = it.message
-                text_view_error.visibility = View.VISIBLE
-            } else if (it.status == Status.SUCCESS) {
-                //Leave the register fragment
-                activity!!.supportFragmentManager.popBackStackImmediate()
-            }
-        })
-
+        // Show the correct views if the viewmodel is registering
         registerViewModel.getLoadingVisibility().observe(this, Observer {
             if (it) {
                 //Show the loading bar
@@ -46,6 +41,19 @@ class RegisterFragment : Fragment() {
                 button_register.visibility = View.VISIBLE
             }
         })
+
+        // Update the UI when the viewmodel finishes registering
+        registerViewModel.getRegisterResult().observe(this, Observer {
+            if (it.status == Status.ERROR) {
+                // Display an error message
+                text_view_error.text = it.message
+                text_view_error.visibility = View.VISIBLE
+            } else if (it.status == Status.SUCCESS) {
+                // Leave the register fragment
+                activity!!.supportFragmentManager.popBackStackImmediate()
+            }
+        })
+
     }
 
     override fun onCreateView(
@@ -55,23 +63,24 @@ class RegisterFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_register, container, false)
 
+        // Registration button listener
         view.button_register.setOnClickListener {
 
             val usernameText = view.textinput_username.text.toString()
             val passwordText = view.textinput_password.text.toString()
             val repeatPasswordText = view.textinput_repeatpassword.text.toString()
 
-            //Verify the input
+            // Verify the user input
             var errors = false
-            if (usernameText.isNullOrBlank()) {
+            if (usernameText.isBlank()) {
                 textinput_username.error = "Username can't be blank"
                 errors = true
             }
-            if (passwordText.isNullOrBlank()) {
+            if (passwordText.isBlank()) {
                 textinput_password.error = "Password can't be blank"
                 errors = true
             }
-            if (repeatPasswordText.isNullOrBlank()) {
+            if (repeatPasswordText.isBlank()) {
                 textinput_repeatpassword.error = "Repeat Password can't be blank"
                 errors = true
             }
@@ -80,6 +89,7 @@ class RegisterFragment : Fragment() {
                 errors = true
             }
 
+            // Try to register the user
             if (!errors) registerViewModel.register(
                 usernameText,
                 passwordText
@@ -91,6 +101,9 @@ class RegisterFragment : Fragment() {
 
     //Instance method
     companion object {
+        /**
+         * Create a new instance of the RegisterFragment
+         */
         fun newInstance(): RegisterFragment {
             return RegisterFragment()
         }

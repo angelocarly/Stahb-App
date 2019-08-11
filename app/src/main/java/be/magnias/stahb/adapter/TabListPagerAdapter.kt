@@ -3,13 +3,8 @@ package be.magnias.stahb.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import be.magnias.stahb.App
-import be.magnias.stahb.persistence.TabRepository
-import be.magnias.stahb.persistence.UserRepository
-import be.magnias.stahb.persistence.UserService
 import be.magnias.stahb.ui.fragment.TabListFavoritesFragment
 import be.magnias.stahb.ui.fragment.TabListFragment
-import javax.inject.Inject
 
 class TabListPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 

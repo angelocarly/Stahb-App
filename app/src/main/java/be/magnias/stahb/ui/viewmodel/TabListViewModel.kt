@@ -16,22 +16,35 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+/**
+ * ViewModel for the TabList Fragment.
+ * Provides a way for the UI to receive all the tabs.
+ */
 class TabListViewModel : ViewModel() {
 
     @Inject
     lateinit var tabRepository: TabRepository
 
+    /**
+     * Provides the loaded tabs
+     */
     private var allTabs: MutableLiveData<Resource<List<Tab>>> = MutableLiveData()
+
     /**
      * Indicates whether the loading view should be displayed.
      */
     private val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
+    /**
+     * Disposable to dispose of requests
+     */
     private var subscription: Disposable
 
     init {
+        // Inject services with Dagger
         App.appComponent.inject(this)
 
+        // Load the tabs
         subscription = tabRepository.getAllTabs()
             .debounce(700, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
@@ -44,19 +57,22 @@ class TabListViewModel : ViewModel() {
     }
 
     private fun onRetrieveTabsStart() {
+        // Set the loading status to visible
         loadingVisibility.value = View.VISIBLE
     }
 
     private fun onRetrieveTabsFinish() {
+        // Set the loading status to invisible
         loadingVisibility.value = View.GONE
     }
 
     private fun onRetrieveTabsSuccess(tabs: List<Tab>) {
-        Logger.d("[Viemmodel] Receive tabs from database")
+        // Store the received tabs in the result
         allTabs.value = Resource(Status.SUCCESS, tabs, null)
     }
 
     private fun onRetrieveTabsError(e: Throwable) {
+        // Store an Error Status in the result
         allTabs.value = Resource<List<Tab>>(Status.ERROR, null, e.message)
     }
 
@@ -70,6 +86,8 @@ class TabListViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+
+        //Dispose of the request
         subscription.dispose()
     }
 }

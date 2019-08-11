@@ -29,10 +29,6 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
-}
-
 dependencies {
 
     // Dagger

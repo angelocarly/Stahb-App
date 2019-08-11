@@ -13,11 +13,13 @@ import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.viewmodel.TabViewModel
 import be.magnias.stahb.ui.viewmodel.TabViewModelFactory
-import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab.*
 import kotlinx.android.synthetic.main.fragment_tab.view.*
 
-
+/**
+ * The tab fragment.
+ * In this fragment a single tab is displayed along with it's details.
+ */
 class TabFragment : Fragment() {
 
     private lateinit var tabViewModel: TabViewModel
@@ -25,16 +27,13 @@ class TabFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Get the id from the parameters
+        // Get the tab id from the parameters
         val id = getTabId()
 
-        setHasOptionsMenu(true)
-
-        //Init viewmodel
+        // Init viewmodel
         tabViewModel = ViewModelProviders.of(this, TabViewModelFactory(id)).get(TabViewModel::class.java)
 
-
-        //Losding panel visibility
+        // Show the correct views if the viewmodel is loading data
         tabViewModel.getLoadingVisibility().observe(this, Observer {loadingVisible ->
             if(loadingVisible) {
                 loading_panel.visibility = View.VISIBLE
@@ -46,7 +45,7 @@ class TabFragment : Fragment() {
             }
         })
 
-        //Load tab data
+        // Show the tab's data when the viewmodel returns a tab
         tabViewModel.getTab().observe(this, Observer<Resource<Tab>> {
             if (it.status == Status.SUCCESS) {
                 //Set tab data
@@ -62,14 +61,19 @@ class TabFragment : Fragment() {
                 tab_error.visibility = View.VISIBLE
             }
         })
+
+        // Enable the fragment's toolbar
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
 
-        //Add or remove tab based on favorite button
+        // Favorite button listener
         view.checkbox_favorite.setOnClickListener {
+
+            //Add or remove a tab from favorites
             if(view.checkbox_favorite.isChecked) {
                 tabViewModel.addToFavorite()
             }
@@ -81,7 +85,10 @@ class TabFragment : Fragment() {
         return view
     }
 
-    //Get the tab id from the fragment parameters
+    /**
+     * Retrieve the tab's id from the fragment parameters
+     * @throws IllegalArgumentException if no id is found in the fragment
+     */
     private fun getTabId(): String {
         val id: String?
         if (arguments != null) {
@@ -98,12 +105,18 @@ class TabFragment : Fragment() {
         return id
     }
 
-    //Instance method
+    // Instance method
     companion object {
+
+        /**
+         * Create a new TabFragment instance
+         * @param id The id of the tab that should be displayed
+         */
         fun newInstance(id: String): TabFragment {
 
             val frag = TabFragment()
 
+            // Store the id in the fragment arguments
             val args = Bundle()
             args.putString("id", id)
             frag.arguments = args
