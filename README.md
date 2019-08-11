@@ -14,3 +14,4 @@ De backend van deze app is gehost op http://server.magnias.be:3000, de code vind
 - [RxAndroid](https://github.com/ReactiveX/RxAndroid)
 - [Room](https://developer.android.com/topic/libraries/architecture/room)
 - [Logger](https://github.com/orhanobut/logger)
+- [Dokka](https://github.com/Kotlin/dokka)
