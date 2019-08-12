@@ -27,7 +27,7 @@ class TabAdapter : ListAdapter<Tab, TabAdapter.ViewHolder>(DIFF_CALLBACK) {
             }
 
             override fun areContentsTheSame(oldItem: Tab, newItem: Tab): Boolean {
-                return oldItem.artist == newItem.artist && oldItem.song == newItem.song && oldItem._id == newItem._id
+                return oldItem.artist == newItem.artist && oldItem.song == newItem.song && oldItem._id == newItem._id && oldItem.loaded == newItem.loaded
             }
         }
     }

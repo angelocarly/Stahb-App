@@ -24,7 +24,7 @@ abstract class TabDao {
     abstract fun insert(tab: Tab)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertIgnoreConflict(tab: Tab): Long
+    abstract fun insertIgnoreOnConflict(tab: Tab): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertAll(tabs: List<Tab>)
