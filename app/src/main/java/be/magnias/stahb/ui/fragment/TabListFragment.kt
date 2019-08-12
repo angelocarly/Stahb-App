@@ -19,6 +19,7 @@ import be.magnias.stahb.ui.viewmodel.TabListViewModel
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab_list.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
+import org.jetbrains.anko.support.v4.runOnUiThread
 
 /**
  * The TabList Fragment.
@@ -56,6 +57,7 @@ class TabListFragment : Fragment() {
                 } else {
                     tab_list_no_tabs.visibility = View.GONE
                     adapter.submitList(it.data)
+                    adapter.notifyDataSetChanged()
                 }
             } else if (it.status == Status.ERROR) {
                 // Display an error message
@@ -77,9 +79,9 @@ class TabListFragment : Fragment() {
         // Setup recyclerview
         view.recycler_view.layoutManager = LinearLayoutManager(activity!!.applicationContext)
         view.recycler_view.setHasFixedSize(true)
-
+        Logger.d("Createview")
         // Setup RecyclerView Adapter
-        view.recycler_view.adapter = adapter
+        view.recycler_view.adapter = this.adapter
 
         // Access the MainActivity's ViewModel
         activity?.let {
@@ -97,5 +99,9 @@ class TabListFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 }

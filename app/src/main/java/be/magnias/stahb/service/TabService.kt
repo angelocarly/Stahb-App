@@ -128,7 +128,7 @@ class TabService(private val tabDao: TabDao) {
             .subscribeOn(Schedulers.io())
             .doOnSuccess {
                 it.loaded = true
-                val inserted = tabDao.insertIgnoreConflict(it)
+                val inserted = tabDao.insertIgnoreOnConflict(it)
                 if (inserted == -1L) {
                     tabDao.updateFields(
                         it._id,

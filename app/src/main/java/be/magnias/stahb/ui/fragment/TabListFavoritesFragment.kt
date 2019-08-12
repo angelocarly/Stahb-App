@@ -19,6 +19,7 @@ import be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab_list.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
+import org.jetbrains.anko.support.v4.runOnUiThread
 
 /**
  * The TabList Favorites Fragment.
@@ -66,7 +67,7 @@ class TabListFavoritesFragment : Fragment() {
 
         // RecyclerView listener when a tab is clicked
         this.adapter.onItemClick = { tab ->
-            (activity as MainActivity).showTab(tab._id)
+                (activity as MainActivity).showTab(tab._id)
         }
     }
 
@@ -97,5 +98,4 @@ class TabListFavoritesFragment : Fragment() {
 
         return view
     }
-
 }
