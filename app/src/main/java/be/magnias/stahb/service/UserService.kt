@@ -10,6 +10,9 @@ import com.orhanobut.logger.Logger
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiConsumer
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -34,6 +37,8 @@ class UserService {
      */
     private var loggedInSubject: BehaviorSubject<Boolean> = BehaviorSubject.create()
 
+    private var loginDisposable = CompositeDisposable()
+
     init {
         // Inject services using Dagger
         App.appComponent.inject(this)
@@ -54,8 +59,8 @@ class UserService {
     /**
      * Log the user out
      */
-    fun logout() {
-        saveLogin(null)
+    fun logout(): Single<Boolean> {
+        return saveLogin(null)
     }
 
     /**
@@ -68,7 +73,7 @@ class UserService {
      */
     fun login(username: String, password: String): Single<Boolean> {
 
-        return Observable.create<Boolean> {
+        return Single.create<Boolean> { s ->
             // Execute the call
             val res = stahbApi.login(username, password).execute()
 
@@ -76,27 +81,23 @@ class UserService {
                 when (res.code()) {
                     401 -> {
                         Logger.d("Failed logging in, unauthorized")
-                        throw UnAuthorizedException()
+                        s.onError(UnAuthorizedException())
                     }
                     else -> {
                         Logger.d("Failed logging in")
-                        throw BadRequestException()
+                        s.onError(BadRequestException())
                     }
                 }
             } else {
                 // Persist our token
-                saveLogin(res.body())
-
-                // Return true to mark success
-                it.onNext(true)
+                saveLogin(res.body()).subscribe(
+                    { s.onSuccess(true)},
+                    { s.onError(it)}
+                )
             }
-
-            // Mark complete
-            it.onComplete()
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .singleOrError()
     }
 
     /**
@@ -107,23 +108,19 @@ class UserService {
      * @throws BadRequestException on failure
      */
     fun register(username: String, password: String): Single<Boolean> {
-        return Observable.create<Boolean> {
+        return Single.create<Boolean> {
             val res = stahbApi.register(username, password).execute()
 
             if (!res.isSuccessful) {
                 Logger.d("Failed registering")
-                throw BadRequestException()
+                it.onError(BadRequestException())
             } else {
                 // Return a value to mark success
-                it.onNext(true)
+                it.onSuccess(true)
             }
-
-            // Mark our action as complete
-            it.onComplete()
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .singleOrError()
     }
 
     /**
@@ -131,30 +128,49 @@ class UserService {
      * Transmits any unsaved favorites to the backend first.
      * When the login info is saved, fetch all the favorites.
      */
-    private fun saveLogin(userToken: Token?) {
-        // If another user is still logged in, push his updates first
-        if (isUserLoggedIn()) {
-            tabService.push()
-                .doOnComplete {
-                    // Save the token
-                    if(userToken == null) userRepository.removeUserToken()
-                    else userRepository.saveUserToken(userToken)
+    private fun saveLogin(userToken: Token?): Single<Boolean> {
 
-                    // Update favorites list
-                    tabService.fetch().subscribe()
-                }
-                .subscribe()
-        } else {
+        loginDisposable.clear()
+        return Single.create<Boolean> { s ->
+            // If another user is still logged in, push his updates first
+            if (isUserLoggedIn()) {
+                loginDisposable.add(
+                    tabService.push()
+                        .subscribe({}, { error ->
+                            s.tryOnError(error)
+                        })
+                )
+
+                // Save the token
+                if (userToken == null) userRepository.removeUserToken()
+                else userRepository.saveUserToken(userToken)
+
+                // Update favorites list
+                loginDisposable.add(
+                    tabService.fetch()
+                        .subscribe({}, { error ->
+                            s.tryOnError(error)
+                        })
+                )
+            }
+
             // Save the token
-            if(userToken == null) userRepository.removeUserToken()
+            if (userToken == null) userRepository.removeUserToken()
             else userRepository.saveUserToken(userToken)
 
             // Refresh favorites list
-            tabService.fetch().subscribe()
-        }
+            loginDisposable.add(
+                tabService.fetch()
+                    .subscribe({}, { error ->
+                        s.tryOnError(error)
+                    })
+            )
 
-        // Push the logged in status to our subject
-        loggedInSubject.onNext(userToken != null)
+            // Push the logged in status to our subject
+            loggedInSubject.onNext(userToken != null)
+
+            s.onSuccess(true)
+        }.observeOn(AndroidSchedulers.mainThread())
     }
 
 }

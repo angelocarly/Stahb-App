@@ -1,5 +1,6 @@
 package be.magnias.stahb.ui.viewmodel
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,11 @@ class MainViewModel : ViewModel() {
      */
     private var refreshSubscription: CompositeDisposable = CompositeDisposable()
 
+    /**
+     * Disposable to dispose of logout requests
+     */
+    private var logoutSubscription: CompositeDisposable = CompositeDisposable()
+
     init {
         // Inject services with Dagger
         App.appComponent.inject(this)
@@ -62,12 +68,10 @@ class MainViewModel : ViewModel() {
                     refreshLoadingVisibility.value = Resource(Status.SUCCESS, true, null)
                     Logger.d("Refreshed tabs")
                 }
-                .doOnError {
-                    refreshLoadingVisibility.value = Resource(Status.ERROR, true, it.message)
-                }
                 .subscribe(
                     { },
                     { error ->
+                        refreshLoadingVisibility.value = Resource(Status.ERROR, true, error.message)
                         Logger.e(error.message!!)
                     }
                 )
@@ -78,12 +82,17 @@ class MainViewModel : ViewModel() {
      * Log the user out.
      */
     fun logout() {
-        userService.logout()
+        logoutSubscription.clear()
+        logoutSubscription.add(
+            userService.logout().subscribe { t1, t2 ->
+            }
+        )
     }
 
     override fun onCleared() {
         super.onCleared()
         // Dispose of any requests
         refreshSubscription.dispose()
+        logoutSubscription.dispose()
     }
 }

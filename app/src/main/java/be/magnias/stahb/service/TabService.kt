@@ -1,12 +1,15 @@
 package be.magnias.stahb.service
 
 import be.magnias.stahb.App
+import be.magnias.stahb.error.UnAuthorizedException
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.persistence.dao.TabDao
 import be.magnias.stahb.network.StahbApi
 import be.magnias.stahb.persistence.UserRepository
 import com.orhanobut.logger.Logger
+import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
@@ -33,11 +36,11 @@ class TabService(private val tabDao: TabDao) {
      * Send any new changes to the backend.
      * @return Observable returning true on success.
      */
-    fun push(): Observable<Boolean> {
+    fun push(): Single<Boolean> {
 
         // If no user is logged in then we can't push any data
         if (!userRepository.isUserLoggedIn()) {
-            return Observable.empty()
+            return Single.create { it.onSuccess(false) }
         }
 
 
@@ -63,23 +66,20 @@ class TabService(private val tabDao: TabDao) {
                 }
                 tabDao.setAllTabsFresh()
             }
+            .singleOrError()
     }
 
     /**
      * Get the latest version of the tabs from the backend.
      */
-    fun fetch(): Observable<Boolean> {
+    fun fetch(): Single<Boolean> {
         //Refresh the data in the cache
         if (userRepository.isUserLoggedIn()) {
             //Fetches the favorites and new tabs from the api, update the cache when both are loaded
-            return Observable.combineLatest(
+            return Single.zip(
                 loadFavoritesFromApi()
-                    .singleOrError()
-                    .toObservable()
                     .subscribeOn(Schedulers.io()),
                 loadTabsFromApi()
-                    .singleOrError()
-                    .toObservable()
                     .subscribeOn(Schedulers.io()),
                 BiFunction { favorites: List<Tab>, tabs: List<Tab> ->
                     tabDao.updateAll(favorites, tabs)
@@ -89,10 +89,8 @@ class TabService(private val tabDao: TabDao) {
         } else {
             // Only load the new list when user is not logged in
             return loadTabsFromApi()
-                .singleOrError()
-                .toObservable()
                 .subscribeOn(Schedulers.io())
-                .doOnNext {
+                .doOnSuccess {
                     tabDao.updateAll(it)
                 }
                 .map { true }
@@ -102,8 +100,8 @@ class TabService(private val tabDao: TabDao) {
     /**
      * Perform both a push and a fetch.
      */
-    fun refresh(): Observable<Boolean> {
-        return Observable.concat(
+    fun refresh(): Flowable<Boolean> {
+        return Single.concat(
             push(),
             fetch()
         )
@@ -125,10 +123,10 @@ class TabService(private val tabDao: TabDao) {
      * @param id The id of the requested tab.
      * @return Observable with the requested tab.
      */
-    private fun loadTabFromApi(id: String): Observable<Tab> {
+    private fun loadTabFromApi(id: String): Single<Tab> {
         return stahbApi.getTab(id)
             .subscribeOn(Schedulers.io())
-            .doOnNext {
+            .doOnSuccess {
                 it.loaded = true
                 val inserted = tabDao.insertIgnoreConflict(it)
                 if (inserted == -1L) {
@@ -165,7 +163,7 @@ class TabService(private val tabDao: TabDao) {
         return loadTabsFromCache()
     }
 
-    private fun loadTabsFromApi(): Observable<List<Tab>> {
+    private fun loadTabsFromApi(): Single<List<Tab>> {
         // Load tabs from network
         return stahbApi.getAllTabInfo()
     }
@@ -183,10 +181,12 @@ class TabService(private val tabDao: TabDao) {
         return loadFavoritesFromCache()
     }
 
-    private fun loadFavoritesFromApi(): Observable<List<Tab>> {
+    private fun loadFavoritesFromApi(): Single<List<Tab>> {
         // Load favorites from network
         if (!userRepository.isUserLoggedIn()) {
-            return Observable.empty()
+            return Single.create {
+                it.tryOnError(UnAuthorizedException())
+            }
         }
 
         return stahbApi.getFavorites()
