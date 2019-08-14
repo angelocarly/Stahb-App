@@ -111,16 +111,14 @@ class TabService(private val tabDao: TabDao) {
      * If the tab in the database is not loaded entirely, then request the full tab from the backend.
      */
     fun getTab(id: String): Observable<Tab> {
-        return Observable.create {
-            loadTabFromCache(id)
-                .doOnNext {tab ->
-                    if (!tab.loaded) loadTabFromApi(id).subscribe({}, {error -> it.onError(error)})
-                    else it.onNext(tab)
-                }
-                .filter { tab -> tab.loaded }
-                .doOnComplete { it.onComplete() }
-                .subscribe()
-        }
+        return loadTabFromCache(id)
+            .concatMap {
+                // If the tab is not cached, load it from the api
+                if (!it.loaded) loadTabFromApi(id).toObservable()
+                // Else all is fine and use the cache
+                else Observable.just(it)
+            }
+
     }
 
     /**
@@ -134,6 +132,7 @@ class TabService(private val tabDao: TabDao) {
             .subscribeOn(Schedulers.io())
             .doOnSuccess {
                 it.loaded = true
+                // Insert ignore on conflict to not overwrite favorite status
                 val inserted = tabDao.insertIgnoreOnConflict(it)
                 if (inserted == -1L) {
                     tabDao.updateFields(
