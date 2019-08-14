@@ -5,6 +5,7 @@ import be.magnias.stahb.adapter.TabListPagerAdapter
 import be.magnias.stahb.injection.module.DatabaseModule
 import be.magnias.stahb.injection.module.NetworkModule
 import be.magnias.stahb.network.ServiceInterceptor
+import be.magnias.stahb.persistence.TabRepository
 import be.magnias.stahb.service.TabService
 import be.magnias.stahb.persistence.UserRepository
 import be.magnias.stahb.service.UserService
@@ -78,6 +79,12 @@ interface AppComponent {
      * @param userRepository UserRepository in which to inject the dependencies
      */
     fun inject(userRepository: UserRepository)
+
+    /**
+     * Injects required dependencies into the specified TabRepository.
+     * @param tabRepository TabRepository in which to inject the dependencies
+     */
+    fun inject(tabRepository: TabRepository)
 
     /**
      * Injects required dependencies into the specified TabListPagerAdapter.

@@ -18,8 +18,14 @@ class DatabaseModule(private val application: Application) {
 
     @Provides
     @Singleton
-    internal fun provideTabRepository(tabDao: TabDao): TabService {
-        return TabService(tabDao)
+    internal fun provideTabService(): TabService {
+        return TabService()
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideTabRepository(tabDao: TabDao): TabRepository {
+        return TabRepository(tabDao)
     }
 
     @Provides

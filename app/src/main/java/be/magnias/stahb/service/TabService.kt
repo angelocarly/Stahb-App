@@ -2,10 +2,9 @@ package be.magnias.stahb.service
 
 import be.magnias.stahb.App
 import be.magnias.stahb.error.UnAuthorizedException
-import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Tab
-import be.magnias.stahb.persistence.dao.TabDao
 import be.magnias.stahb.network.StahbApi
+import be.magnias.stahb.persistence.TabRepository
 import be.magnias.stahb.persistence.UserRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.Flowable
@@ -13,20 +12,22 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
-import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 
 /**
  * Service for User data.
  * Handles caching with the Database as its single source of truth.
  */
-class TabService(private val tabDao: TabDao) {
+class TabService {
 
     @Inject
     lateinit var stahbApi: StahbApi
 
     @Inject
     lateinit var userRepository: UserRepository
+
+    @Inject
+    lateinit var tabRepository: TabRepository
 
     init {
         // Inject Services with Dagger
@@ -46,9 +47,9 @@ class TabService(private val tabDao: TabDao) {
 
 
         var tabs: List<Tab>? = null
-        return tabDao
+        return tabRepository
             // Retrieve all the changed tabs in the database
-            .getAllUpdatedTabs().firstOrError()
+            .getAllEditedTabs().firstOrError()
             .doOnSuccess {
                 // Store them in a temporary variable
                 tabs = it
@@ -63,7 +64,7 @@ class TabService(private val tabDao: TabDao) {
                         stahbApi.deleteFavorite(t._id).execute()
                     }
                 }
-                tabDao.setAllTabsFresh()
+                tabRepository.setAllTabsFresh()
             }
             .map { true }
     }
@@ -81,7 +82,7 @@ class TabService(private val tabDao: TabDao) {
                 loadTabsFromApi()
                     .subscribeOn(Schedulers.io()),
                 BiFunction { favorites: List<Tab>, tabs: List<Tab> ->
-                    tabDao.updateAll(favorites, tabs)
+                    tabRepository.updateAll(favorites, tabs)
                 }
             )
                 .map { true }
@@ -90,7 +91,7 @@ class TabService(private val tabDao: TabDao) {
             return loadTabsFromApi()
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess {
-                    tabDao.updateAll(it)
+                    tabRepository.updateAll(it)
                 }
                 .map { true }
         }
@@ -111,16 +112,14 @@ class TabService(private val tabDao: TabDao) {
      * If the tab in the database is not loaded entirely, then request the full tab from the backend.
      */
     fun getTab(id: String): Observable<Tab> {
-        return Observable.create {
-            loadTabFromCache(id)
-                .doOnNext {tab ->
-                    if (!tab.loaded) loadTabFromApi(id).subscribe({}, {error -> it.onError(error)})
-                    else it.onNext(tab)
-                }
-                .filter { tab -> tab.loaded }
-                .doOnComplete { it.onComplete() }
-                .subscribe()
-        }
+        return tabRepository.loadTabFromCache(id)
+            .concatMap {
+                // If the tab is not cached, load it from the api
+                if (!it.loaded) loadTabFromApi(id).toObservable()
+                // Else all is fine and use the cache
+                else Observable.just(it)
+            }
+
     }
 
     /**
@@ -133,32 +132,9 @@ class TabService(private val tabDao: TabDao) {
         return stahbApi.getTab(id)
             .subscribeOn(Schedulers.io())
             .doOnSuccess {
-                it.loaded = true
-                val inserted = tabDao.insertIgnoreOnConflict(it)
-                if (inserted == -1L) {
-                    tabDao.updateFields(
-                        it._id,
-                        it.artist,
-                        it.song,
-                        it.tab!!,
-                        it.tuning!!,
-                        true
-                    )
-                }
+                tabRepository.storeTabInCache(it)
                 Logger.d("Dispatching tab $id from API")
             }
-    }
-
-    /**
-     * Load a tab from the cache.
-     * Returns nothing when no tab is found.
-     */
-    private fun loadTabFromCache(id: String): Observable<Tab> {
-        return tabDao.getTab(id)
-            .doOnNext {
-                Logger.d("Dispatching tab $id from database")
-            }
-            .subscribeOn(Schedulers.io())
     }
 
     /**
@@ -166,7 +142,7 @@ class TabService(private val tabDao: TabDao) {
      * TODO refresh data when it's too stale.
      */
     fun getAllTabs(): Observable<List<Tab>> {
-        return loadTabsFromCache()
+        return tabRepository.loadTabsFromCache()
     }
 
     private fun loadTabsFromApi(): Single<List<Tab>> {
@@ -174,17 +150,13 @@ class TabService(private val tabDao: TabDao) {
         return stahbApi.getAllTabInfo()
     }
 
-    private fun loadTabsFromCache(): Observable<List<Tab>> {
-        // Load tabs from cache
-        return tabDao.getAllTabs()
-    }
 
     /**
      * Get all the stored favorite tabs in the database.
      * TODO refresh data when it's too stale.
      */
     fun getFavoriteTabs(): Observable<List<Tab>> {
-        return loadFavoritesFromCache()
+        return tabRepository.loadFavoritesFromCache()
     }
 
     private fun loadFavoritesFromApi(): Single<List<Tab>> {
@@ -198,8 +170,13 @@ class TabService(private val tabDao: TabDao) {
         return stahbApi.getFavorites()
     }
 
-    private fun loadFavoritesFromCache(): Observable<List<Tab>> {
-        return tabDao.getFavorites()
+    /**
+     * Remove a tab from the favorites.
+     * Changes are not posted immediately.
+     * Do a push() or refresh() to update data on the backend.
+     */
+    fun removeFromFavorites(id: String) {
+        tabRepository.removeFromFavorites(id)
     }
 
     /**
@@ -208,20 +185,7 @@ class TabService(private val tabDao: TabDao) {
      * Do a push() or refresh() to update data on the backend.
      */
     fun addFavorite(id: String) {
-        doAsync {
-            tabDao.addFavorite(id)
-        }
-    }
-
-    /**
-     * Remove a tab from the favorites.
-     * Changes are not posted immediately.
-     * Do a push() or refresh() to update data on the backend.
-     */
-    fun removeFromFavorites(id: String) {
-        doAsync {
-            tabDao.removeFavorite(id)
-        }
+        tabRepository.addFavorite(id)
     }
 
 }
