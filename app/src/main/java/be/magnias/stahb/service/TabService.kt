@@ -2,6 +2,7 @@ package be.magnias.stahb.service
 
 import be.magnias.stahb.App
 import be.magnias.stahb.error.UnAuthorizedException
+import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.persistence.dao.TabDao
 import be.magnias.stahb.network.StahbApi
@@ -52,9 +53,7 @@ class TabService(private val tabDao: TabDao) {
                 // Store them in a temporary variable
                 tabs = it
             }
-            .map { true }
-            .toObservable()
-            .doOnComplete {
+            .doOnSuccess {
                 // Send each tab to the backend
                 // TODO streamline the operation to use less network calls.
                 tabs?.forEach { t ->
@@ -66,7 +65,7 @@ class TabService(private val tabDao: TabDao) {
                 }
                 tabDao.setAllTabsFresh()
             }
-            .singleOrError()
+            .map { true }
     }
 
     /**
@@ -112,9 +111,16 @@ class TabService(private val tabDao: TabDao) {
      * If the tab in the database is not loaded entirely, then request the full tab from the backend.
      */
     fun getTab(id: String): Observable<Tab> {
-        return loadTabFromCache(id)
-            .doOnNext { if (!it.loaded) loadTabFromApi(id).subscribe() }
-            .filter { t -> t.loaded }
+        return Observable.create {
+            loadTabFromCache(id)
+                .doOnNext {tab ->
+                    if (!tab.loaded) loadTabFromApi(id).subscribe({}, {error -> it.onError(error)})
+                    else it.onNext(tab)
+                }
+                .filter { tab -> tab.loaded }
+                .doOnComplete { it.onComplete() }
+                .subscribe()
+        }
     }
 
     /**
