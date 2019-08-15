@@ -7,6 +7,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.error.UnAuthorizedException
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
+import be.magnias.stahb.service.IUserService
 import be.magnias.stahb.service.UserService
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class LoginViewModel : ViewModel() {
 
     @Inject
-    lateinit var userService: UserService
+    lateinit var userService: IUserService
 
     /**
      * Provides the status of the request

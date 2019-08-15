@@ -50,9 +50,4 @@ class NetworkModule {
             .build()
     }
 
-    @Provides
-    @Singleton
-    internal fun provideUserService(): UserService {
-        return UserService()
-    }
 }

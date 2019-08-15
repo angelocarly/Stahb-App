@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * Repository for User data.
  */
-class UserRepository {
+class UserRepository : IUserRepository{
 
     /**
      * In memory cache of the user's token.
@@ -31,7 +31,7 @@ class UserRepository {
      * Persist a user token.
      * @param userToken The userToken or null
      */
-    fun saveUserToken(userToken: Token) {
+    override fun saveUserToken(userToken: Token) {
         // Store the token
         this.userToken = userToken
         context.defaultSharedPreferences.edit().putString("userToken", userToken.token).apply()
@@ -41,17 +41,17 @@ class UserRepository {
     /**
      * Remove a user token.
      */
-    fun removeUserToken() {
+    override fun removeUserToken() {
         // Clear the token in memory and shared preferences.
         this.userToken = Token(null)
         context.defaultSharedPreferences.edit().putString("userToken", null).apply()
     }
 
-    fun getUserToken(): Token {
+    override fun getUserToken(): Token {
         return userToken
     }
 
-    fun isUserLoggedIn(): Boolean {
+    override fun isUserLoggedIn(): Boolean {
         return getUserToken().token != null
     }
 

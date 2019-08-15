@@ -1,6 +1,7 @@
 package be.magnias.stahb.network
 
 import be.magnias.stahb.App
+import be.magnias.stahb.persistence.IUserRepository
 import be.magnias.stahb.persistence.UserRepository
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -13,7 +14,7 @@ import javax.inject.Inject
 class ServiceInterceptor : Interceptor {
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: IUserRepository
 
     init {
         // Inject services with Dagger

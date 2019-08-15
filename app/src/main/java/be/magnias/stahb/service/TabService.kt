@@ -4,6 +4,8 @@ import be.magnias.stahb.App
 import be.magnias.stahb.error.UnAuthorizedException
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.network.StahbApi
+import be.magnias.stahb.persistence.ITabRepository
+import be.magnias.stahb.persistence.IUserRepository
 import be.magnias.stahb.persistence.TabRepository
 import be.magnias.stahb.persistence.UserRepository
 import com.orhanobut.logger.Logger
@@ -18,16 +20,16 @@ import javax.inject.Inject
  * Service for User data.
  * Handles caching with the Database as its single source of truth.
  */
-class TabService {
+class TabService : ITabService {
 
     @Inject
     lateinit var stahbApi: StahbApi
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: IUserRepository
 
     @Inject
-    lateinit var tabRepository: TabRepository
+    lateinit var tabRepository: ITabRepository
 
     init {
         // Inject Services with Dagger
@@ -38,7 +40,7 @@ class TabService {
      * Send any new changes to the backend.
      * @return Observable returning true on success.
      */
-    fun push(): Single<Boolean> {
+    override fun push(): Single<Boolean> {
 
         // If no user is logged in then we can't push any data
         if (!userRepository.isUserLoggedIn()) {
@@ -72,7 +74,7 @@ class TabService {
     /**
      * Get the latest version of the tabs from the backend.
      */
-    fun fetch(): Single<Boolean> {
+    override fun fetch(): Single<Boolean> {
         //Refresh the data in the cache
         if (userRepository.isUserLoggedIn()) {
             //Fetches the favorites and new tabs from the api, update the cache when both are loaded
@@ -100,7 +102,7 @@ class TabService {
     /**
      * Perform both a push and a fetch.
      */
-    fun refresh(): Flowable<Boolean> {
+    override fun refresh(): Flowable<Boolean> {
         return Single.concat(
             push(),
             fetch()
@@ -111,8 +113,8 @@ class TabService {
      * Public call to request a tab.
      * If the tab in the database is not loaded entirely, then request the full tab from the backend.
      */
-    fun getTab(id: String): Observable<Tab> {
-        return tabRepository.loadTabFromCache(id)
+    override fun getTab(id: String): Observable<Tab> {
+        return tabRepository.loadTab(id)
             .concatMap {
                 // If the tab is not cached, load it from the api
                 if (!it.loaded) loadTabFromApi(id).toObservable()
@@ -132,7 +134,7 @@ class TabService {
         return stahbApi.getTab(id)
             .subscribeOn(Schedulers.io())
             .doOnSuccess {
-                tabRepository.storeTabInCache(it)
+                tabRepository.storeTab(it)
                 Logger.d("Dispatching tab $id from API")
             }
     }
@@ -141,8 +143,8 @@ class TabService {
      * Get all the stored tabs in the database.
      * TODO refresh data when it's too stale.
      */
-    fun getAllTabs(): Observable<List<Tab>> {
-        return tabRepository.loadTabsFromCache()
+    override fun getAllTabs(): Observable<List<Tab>> {
+        return tabRepository.loadTabs()
     }
 
     private fun loadTabsFromApi(): Single<List<Tab>> {
@@ -155,8 +157,8 @@ class TabService {
      * Get all the stored favorite tabs in the database.
      * TODO refresh data when it's too stale.
      */
-    fun getFavoriteTabs(): Observable<List<Tab>> {
-        return tabRepository.loadFavoritesFromCache()
+    override fun getFavoriteTabs(): Observable<List<Tab>> {
+        return tabRepository.loadFavorites()
     }
 
     private fun loadFavoritesFromApi(): Single<List<Tab>> {
@@ -175,7 +177,7 @@ class TabService {
      * Changes are not posted immediately.
      * Do a push() or refresh() to update data on the backend.
      */
-    fun removeFromFavorites(id: String) {
+    override fun removeFromFavorites(id: String) {
         tabRepository.removeFromFavorites(id)
     }
 
@@ -184,7 +186,7 @@ class TabService {
      * Changes are not posted immediately.
      * Do a push() or refresh() to update data on the backend.
      */
-    fun addFavorite(id: String) {
+    override fun addFavorite(id: String) {
         tabRepository.addFavorite(id)
     }
 

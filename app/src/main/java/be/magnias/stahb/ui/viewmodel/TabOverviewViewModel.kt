@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import be.magnias.stahb.App
+import be.magnias.stahb.service.IUserService
 import be.magnias.stahb.service.UserService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class TabOverviewViewModel : ViewModel() {
 
     @Inject
-    lateinit var userService: UserService
+    lateinit var userService: IUserService
 
     /**
      * Provides the user status
