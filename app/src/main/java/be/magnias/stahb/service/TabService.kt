@@ -48,15 +48,10 @@ class TabService : ITabService {
         }
 
 
-        var tabs: List<Tab>? = null
         return tabRepository
             // Retrieve all the changed tabs in the database
             .getAllEditedTabs().firstOrError()
-            .doOnSuccess {
-                // Store them in a temporary variable
-                tabs = it
-            }
-            .doOnSuccess {
+            .doOnSuccess {tabs ->
                 // Send each tab to the backend
                 // TODO streamline the operation to use less network calls.
                 tabs?.forEach { t ->

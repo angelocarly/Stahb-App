@@ -1,0 +1,17 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+be.magnias.stahb
+be.magnias.stahb.adapter
+be.magnias.stahb.error
+be.magnias.stahb.injection.component
+be.magnias.stahb.injection.module
+be.magnias.stahb.model
+be.magnias.stahb.network
+be.magnias.stahb.persistence
+be.magnias.stahb.persistence.dao
+be.magnias.stahb.service
+be.magnias.stahb.ui
+be.magnias.stahb.ui.fragment
+be.magnias.stahb.ui.viewmodel
+be.magnias.stahb.utils
