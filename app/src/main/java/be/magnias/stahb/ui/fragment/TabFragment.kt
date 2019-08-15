@@ -1,6 +1,7 @@
 package be.magnias.stahb.ui.fragment
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
 import be.magnias.stahb.ui.viewmodel.TabViewModel
 import be.magnias.stahb.ui.viewmodel.TabViewModelFactory
+import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab.*
 import kotlinx.android.synthetic.main.fragment_tab.view.*
 
@@ -23,6 +25,8 @@ import kotlinx.android.synthetic.main.fragment_tab.view.*
 class TabFragment : Fragment() {
 
     private lateinit var tabViewModel: TabViewModel
+
+    private var startTextSize: Float? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +85,17 @@ class TabFragment : Fragment() {
                 tabViewModel.removeFromFavorite()
             }
         }
+
+        this.startTextSize = view.tab_text.textSize
+        view.button_zoom_in.setOnClickListener {
+            tabViewModel.zoomIn()
+        }
+        view.button_zoom_out.setOnClickListener {
+            tabViewModel.zoomOut()
+        }
+        tabViewModel.getZoom().observe(this, Observer {zoom ->
+            view.tab_text.setTextSize(TypedValue.COMPLEX_UNIT_PX, startTextSize!! * zoom)
+        })
 
         return view
     }

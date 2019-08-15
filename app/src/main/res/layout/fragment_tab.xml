@@ -21,9 +21,29 @@
         <CheckBox
                 android:id="@+id/checkbox_favorite"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:button="@drawable/favorite_checkbox"
                 android:background="@null"/>
+
+        <ImageView
+            android:id="@+id/button_zoom_in"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="2dp"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_zoom_in_black_24dp"/>
+
+        <ImageView
+                android:id="@+id/button_zoom_out"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:paddingEnd="2dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_zoom_out_black_24dp"/>
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -91,6 +111,7 @@
                         android:layout_height="match_parent"
                         android:id="@+id/tab_text"
                         android:layout_marginTop="10dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="monospace"
                         tools:text="Tab"/>
 

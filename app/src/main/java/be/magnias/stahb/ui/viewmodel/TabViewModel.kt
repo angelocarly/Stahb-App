@@ -15,6 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.math.max
 
 /**
  * ViewModel for the Tab Fragment.
@@ -39,6 +40,14 @@ class TabViewModel(id: String) : ViewModel() {
     private val loadingVisibility: MutableLiveData<Boolean> = MutableLiveData()
 
     /**
+     * Variables/constants to keep tracks of the text zoom.
+     */
+    private var zoom: MutableLiveData<Float> = MutableLiveData()
+    private val zoomFactor: Float = 1.1f
+    private val minZoom: Float = 0.5f
+    private val maxZoom: Float = 1.65f
+
+    /**
      * Disposable to dispose of requests
      */
     private var disposable = CompositeDisposable()
@@ -46,6 +55,8 @@ class TabViewModel(id: String) : ViewModel() {
     init {
         // Inject services with Dagger
         App.appComponent.inject(this)
+
+        zoom.value = 1.0f
 
         // Get the tab
         disposable.add(
@@ -91,6 +102,14 @@ class TabViewModel(id: String) : ViewModel() {
     }
 
     /**
+     * Get the zoom of the tab.
+     * @return float value that represents the scale
+     */
+    fun getZoom(): LiveData<Float> {
+        return zoom
+    }
+
+    /**
      * Add the current tab to the user's favorites.
      */
     fun addToFavorite() {
@@ -102,6 +121,16 @@ class TabViewModel(id: String) : ViewModel() {
      */
     fun removeFromFavorite() {
         tabService.removeFromFavorites(tabId)
+    }
+
+    fun zoomIn() {
+        zoom.value = zoom.value!! * zoomFactor
+        if(zoom.value!! > maxZoom) zoom.value = maxZoom
+    }
+
+    fun zoomOut() {
+        zoom.value = zoom.value!! / zoomFactor
+        if(zoom.value!! < minZoom) zoom.value = minZoom
     }
 
     override fun onCleared() {
