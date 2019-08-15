@@ -17,6 +17,7 @@ import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.MainViewModel
 import be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel
 import com.orhanobut.logger.Logger
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_tab_list.*
 import kotlinx.android.synthetic.main.fragment_tab_list.view.*
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -30,6 +31,8 @@ class TabListFavoritesFragment : Fragment() {
     private lateinit var tabFavoritesViewModel: TabListFavoritesViewModel
     // RecyclerView adapter
     private lateinit var adapter: TabAdapter
+
+    private var refreshSubscription: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,11 +94,17 @@ class TabListFavoritesFragment : Fragment() {
             }
 
             // Show the correct elements the tabs are refreshed
-            sharedViewModel.getRefreshLoadingVisibility().observe(this, Observer {
-                    view.tab_list_swipe_refresh.isRefreshing = false
-            })
+            refreshSubscription = sharedViewModel.getRefreshLoadingVisibility().subscribe {
+                view.tab_list_swipe_refresh.isRefreshing = false
+            }
+
         }
 
         return view
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        refreshSubscription?.dispose()
     }
 }

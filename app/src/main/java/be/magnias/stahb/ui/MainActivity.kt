@@ -13,6 +13,7 @@ import be.magnias.stahb.ui.fragment.TabFragment
 import be.magnias.stahb.ui.fragment.TabOverviewFragment
 import be.magnias.stahb.ui.viewmodel.MainViewModel
 import com.orhanobut.logger.Logger
+import io.reactivex.disposables.Disposable
 
 /**
  * The Main Activity of the application.
@@ -21,19 +22,14 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
+    private var refreshSubscription: Disposable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // Initialize viewModel
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        // Display toast error message on refresh failure
-        viewModel.getRefreshLoadingVisibility().observe(this, Observer { r ->
-            if (r.status == Status.ERROR) {
-                Toast.makeText(applicationContext, r.message, Toast.LENGTH_LONG).show()
-            }
-        })
 
         // Set the TabOverviewFragment as content
         if (savedInstanceState == null) {
@@ -45,13 +41,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Show toast on failed load
-        viewModel.getRefreshLoadingVisibility().observe(this, Observer {
+        refreshSubscription = viewModel.getRefreshLoadingVisibility().subscribe({
             if(it.status == Status.ERROR) {
                 Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
             } else if (it?.data == true) {
                 Toast.makeText(applicationContext, "Refreshed tabs!", Toast.LENGTH_LONG).show()
                 Logger.d("HERERERERER")
             }
+        }, {
+            Logger.e(it.message.toString())
         })
 
     }
@@ -100,4 +98,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.logout()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        refreshSubscription?.dispose()
+    }
 }
