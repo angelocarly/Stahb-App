@@ -1,0 +1,140 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TabService - app</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">app</a>&nbsp;/&nbsp;<a href="../index.html">be.magnias.stahb.service</a>&nbsp;/&nbsp;<a href="./index.html">TabService</a><br/>
+<br/>
+<h1>TabService</h1>
+<code><span class="keyword">class </span><span class="identifier">TabService</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-i-tab-service/index.html"><span class="identifier">ITabService</span></a></code>
+<p>Service for User data.
+Handles caching with the Database as its single source of truth.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">TabService</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Service for User data.
+Handles caching with the Database as its single source of truth.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="stahb-api.html">stahbApi</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">stahbApi</span><span class="symbol">: </span><a href="../../be.magnias.stahb.network/-stahb-api/index.html"><span class="identifier">StahbApi</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="tab-repository.html">tabRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">tabRepository</span><span class="symbol">: </span><a href="../../be.magnias.stahb.persistence/-i-tab-repository/index.html"><span class="identifier">ITabRepository</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="user-repository.html">userRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">userRepository</span><span class="symbol">: </span><a href="../../be.magnias.stahb.persistence/-i-user-repository/index.html"><span class="identifier">IUserRepository</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="add-favorite.html">addFavorite</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">addFavorite</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.service.TabService$addFavorite(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add a tab to the favorites.
+Changes are not posted immediately.
+Do a push() or refresh() to update data on the backend.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="fetch.html">fetch</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">fetch</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">&gt;</span></code>
+<p>Get the latest version of the tabs from the backend.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all-tabs.html">getAllTabs</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getAllTabs</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Observable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get all the stored tabs in the database.
+TODO refresh data when it's too stale.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-favorite-tabs.html">getFavoriteTabs</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getFavoriteTabs</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Observable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<p>Get all the stored favorite tabs in the database.
+TODO refresh data when it's too stale.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-tab.html">getTab</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getTab</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.service.TabService$getTab(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Observable</span><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span></code>
+<p>Public call to request a tab.
+If the tab in the database is not loaded entirely, then request the full tab from the backend.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="push.html">push</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">push</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Single</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">&gt;</span></code>
+<p>Send any new changes to the backend.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="refresh.html">refresh</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">refresh</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Flowable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">&gt;</span></code>
+<p>Perform both a push and a fetch.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-from-favorites.html">removeFromFavorites</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">removeFromFavorites</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.service.TabService$removeFromFavorites(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove a tab from the favorites.
+Changes are not posted immediately.
+Do a push() or refresh() to update data on the backend.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

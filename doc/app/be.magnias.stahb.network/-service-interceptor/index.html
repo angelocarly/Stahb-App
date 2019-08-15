@@ -1,0 +1,54 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ServiceInterceptor - app</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">app</a>&nbsp;/&nbsp;<a href="../index.html">be.magnias.stahb.network</a>&nbsp;/&nbsp;<a href="./index.html">ServiceInterceptor</a><br/>
+<br/>
+<h1>ServiceInterceptor</h1>
+<code><span class="keyword">class </span><span class="identifier">ServiceInterceptor</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">Interceptor</span></code>
+<p>Authorization interceptor.
+Adds Authorization Header to any outbound request.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">ServiceInterceptor</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Authorization interceptor.
+Adds Authorization Header to any outbound request.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="user-repository.html">userRepository</a></p>
+</td>
+<td>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">userRepository</span><span class="symbol">: </span><a href="../../be.magnias.stahb.persistence/-i-user-repository/index.html"><span class="identifier">IUserRepository</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="intercept.html">intercept</a></p>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">intercept</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.network.ServiceInterceptor$intercept(okhttp3.Interceptor.Chain)/chain">chain</span><span class="symbol">:</span>&nbsp;<span class="identifier">Chain</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Response</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

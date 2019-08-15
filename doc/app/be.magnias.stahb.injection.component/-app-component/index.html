@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AppComponent - app</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">app</a>&nbsp;/&nbsp;<a href="../index.html">be.magnias.stahb.injection.component</a>&nbsp;/&nbsp;<a href="./index.html">AppComponent</a><br/>
+<br/>
+<h1>AppComponent</h1>
+<code><span class="identifier">@Singleton</span> <span class="identifier">@Component</span><span class="symbol">(</span>[NetworkModule, DatabaseModule]<span class="symbol">)</span> <span class="keyword">interface </span><span class="identifier">AppComponent</span></code>
+<p>Component providing general modules for the application</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-builder/index.html">Builder</a></p>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">Builder</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="inject.html">inject</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.App)/app">app</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb/-app/index.html"><span class="identifier">App</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified App.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.ui.viewmodel.TabViewModel)/tabViewModel">tabViewModel</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.ui.viewmodel/-tab-view-model/index.html"><span class="identifier">TabViewModel</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified tabViewModel.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.ui.viewmodel.TabListViewModel)/tabListViewModel">tabListViewModel</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.ui.viewmodel/-tab-list-view-model/index.html"><span class="identifier">TabListViewModel</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified TabListViewModel.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.ui.viewmodel.TabListFavoritesViewModel)/tabListFavoritesViewModel">tabListFavoritesViewModel</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.ui.viewmodel/-tab-list-favorites-view-model/index.html"><span class="identifier">TabListFavoritesViewModel</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified TabListFavoritesViewModel.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.service.TabService)/tabService">tabService</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.service/-tab-service/index.html"><span class="identifier">TabService</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified TabService.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.ui.viewmodel.MainViewModel)/mainViewModel">mainViewModel</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.ui.viewmodel/-main-view-model/index.html"><span class="identifier">MainViewModel</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified MainViewModel.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.ui.viewmodel.LoginViewModel)/loginViewModel">loginViewModel</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.ui.viewmodel/-login-view-model/index.html"><span class="identifier">LoginViewModel</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified LoginViewModel.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.service.UserService)/userService">userService</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.service/-user-service/index.html"><span class="identifier">UserService</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified UserService.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.network.ServiceInterceptor)/serviceInterceptor">serviceInterceptor</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.network/-service-interceptor/index.html"><span class="identifier">ServiceInterceptor</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified ServiceInterceptor.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.persistence.UserRepository)/userRepository">userRepository</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.persistence/-user-repository/index.html"><span class="identifier">UserRepository</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified UserRepository.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.persistence.TabRepository)/tabRepository">tabRepository</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.persistence/-tab-repository/index.html"><span class="identifier">TabRepository</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified TabRepository.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.adapter.TabListPagerAdapter)/tabListPagerAdapter">tabListPagerAdapter</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.adapter/-tab-list-pager-adapter/index.html"><span class="identifier">TabListPagerAdapter</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified TabListPagerAdapter.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.ui.viewmodel.TabOverviewViewModel)/tabOverviewViewModel">tabOverviewViewModel</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.ui.viewmodel/-tab-overview-view-model/index.html"><span class="identifier">TabOverviewViewModel</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified TabOverviewViewModel.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">inject</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.injection.component.AppComponent$inject(be.magnias.stahb.ui.viewmodel.RegisterViewModel)/registerViewModel">registerViewModel</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.ui.viewmodel/-register-view-model/index.html"><span class="identifier">RegisterViewModel</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Injects required dependencies into the specified RegisterViewModel.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
