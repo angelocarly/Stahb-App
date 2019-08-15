@@ -12,6 +12,7 @@ import be.magnias.stahb.ui.fragment.RegisterFragment
 import be.magnias.stahb.ui.fragment.TabFragment
 import be.magnias.stahb.ui.fragment.TabOverviewFragment
 import be.magnias.stahb.ui.viewmodel.MainViewModel
+import com.orhanobut.logger.Logger
 
 /**
  * The Main Activity of the application.
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, it.message, Toast.LENGTH_LONG).show()
             } else if (it?.data == true) {
                 Toast.makeText(applicationContext, "Refreshed tabs!", Toast.LENGTH_LONG).show()
+                Logger.d("HERERERERER")
             }
         })
 
