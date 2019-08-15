@@ -1,0 +1,180 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TabDao - app</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">app</a>&nbsp;/&nbsp;<a href="../index.html">be.magnias.stahb.persistence.dao</a>&nbsp;/&nbsp;<a href="./index.html">TabDao</a><br/>
+<br/>
+<h1>TabDao</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">TabDao</span></code>
+<p>Room Dao for Tabs.
+Provides SQL statements to access the local SQL lite db.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">TabDao</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<p>Room Dao for Tabs.
+Provides SQL statements to access the local SQL lite db.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="add-favorite.html">addFavorite</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addFavorite</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$addFavorite(kotlin.String)/tabId">tabId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="add-favorites.html">addFavorites</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addFavorites</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$addFavorites(kotlin.collections.List((kotlin.String)))/tabs">tabs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="delete.html">delete</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">delete</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$delete(be.magnias.stahb.model.Tab)/tab">tab</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-all.html">deleteAll</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">deleteAll</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="delete-not-in-list.html">deleteNotInList</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">deleteNotInList</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$deleteNotInList(kotlin.collections.List((kotlin.String)))/tabs">tabs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all-tabs.html">getAllTabs</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getAllTabs</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Observable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-all-updated-tabs.html">getAllUpdatedTabs</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getAllUpdatedTabs</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Observable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-favorites.html">getFavorites</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getFavorites</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Observable</span><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="get-tab.html">getTab</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getTab</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$getTab(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Observable</span><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="has-tab.html">hasTab</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">hasTab</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$hasTab(kotlin.String, kotlin.Int)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$hasTab(kotlin.String, kotlin.Int)/timeout">timeout</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="insert.html">insert</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">insert</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$insert(be.magnias.stahb.model.Tab)/tab">tab</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-all.html">insertAll</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">insertAll</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$insertAll(kotlin.collections.List((be.magnias.stahb.model.Tab)))/tabs">tabs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="insert-ignore-on-conflict.html">insertIgnoreOnConflict</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">insertIgnoreOnConflict</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$insertIgnoreOnConflict(be.magnias.stahb.model.Tab)/tab">tab</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-all-favorites.html">removeAllFavorites</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeAllFavorites</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="remove-favorite.html">removeFavorite</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeFavorite</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$removeFavorite(kotlin.String)/tabId">tabId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="set-all-tabs-fresh.html">setAllTabsFresh</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setAllTabsFresh</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="set-tab-updated.html">setTabUpdated</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">setTabUpdated</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$setTabUpdated(kotlin.String, kotlin.Boolean)/tabId">tabId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$setTabUpdated(kotlin.String, kotlin.Boolean)/updated">updated</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="update.html">update</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">update</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$update(be.magnias.stahb.model.Tab)/tab">tab</span><span class="symbol">:</span>&nbsp;<a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<p><a href="update-all.html">updateAll</a></p>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateAll</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateAll(kotlin.collections.List((be.magnias.stahb.model.Tab)))/tabs">tabs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Replace the entire database.
+Still keeps the cache stored.</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">updateAll</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateAll(kotlin.collections.List((be.magnias.stahb.model.Tab)), kotlin.collections.List((be.magnias.stahb.model.Tab)))/favorites">favorites</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateAll(kotlin.collections.List((be.magnias.stahb.model.Tab)), kotlin.collections.List((be.magnias.stahb.model.Tab)))/tabs">tabs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../be.magnias.stahb.model/-tab/index.html"><span class="identifier">Tab</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Replace the entire database.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="update-fields.html">updateFields</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">updateFields</span><span class="symbol">(</span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateFields(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Boolean)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateFields(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Boolean)/artist">artist</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateFields(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Boolean)/song">song</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateFields(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Boolean)/tab">tab</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateFields(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Boolean)/tuning">tuning</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="be.magnias.stahb.persistence.dao.TabDao$updateFields(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Boolean)/loaded">loaded</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
