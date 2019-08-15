@@ -10,13 +10,13 @@ import org.jetbrains.anko.doAsync
 /**
  * Class that manages the access of tabs in the cache.
  */
-class TabRepository(private val tabDao: TabDao) {
+class TabRepository(private val tabDao: TabDao) : ITabRepository {
 
     /**
      * Load a tab from the cache.
      * Returns nothing when no tab is found.
      */
-    fun loadTabFromCache(id: String): Observable<Tab> {
+    override fun loadTab(id: String): Observable<Tab> {
         return tabDao.getTab(id)
             .doOnNext {
                 Logger.d("Dispatching tab $id from database")
@@ -27,21 +27,21 @@ class TabRepository(private val tabDao: TabDao) {
     /**
      * @return A list of ALL the stored tabs in cache.
      */
-    fun loadTabsFromCache(): Observable<List<Tab>> {
+    override fun loadTabs(): Observable<List<Tab>> {
         return tabDao.getAllTabs()
     }
 
     /**
      * @return A list of all the favorite tabs stored in cache.
      */
-    fun loadFavoritesFromCache(): Observable<List<Tab>> {
+    override fun loadFavorites(): Observable<List<Tab>> {
         return tabDao.getFavorites()
     }
 
     /**
      * @return A list of all the tabs that were updated by the user since the last refresh.
      */
-    fun getAllEditedTabs(): Observable<List<Tab>> {
+    override fun getAllEditedTabs(): Observable<List<Tab>> {
         return tabDao.getAllUpdatedTabs()
     }
 
@@ -50,7 +50,7 @@ class TabRepository(private val tabDao: TabDao) {
      * Changes are not posted immediately.
      * Do a push() or refresh() to update data on the backend.
      */
-    fun addFavorite(id: String) {
+    override fun addFavorite(id: String) {
         doAsync {
             tabDao.addFavorite(id)
         }
@@ -60,7 +60,7 @@ class TabRepository(private val tabDao: TabDao) {
      * Store a tab in cache.
      * @param tab The tab you want to save
      */
-    fun storeTabInCache(tab: Tab) {
+    override fun storeTab(tab: Tab) {
         tab.loaded = true
         // Insert ignore on conflict to not overwrite favorite status
         val inserted = tabDao.insertIgnoreOnConflict(tab)
@@ -79,21 +79,21 @@ class TabRepository(private val tabDao: TabDao) {
     /**
      * Mark all the stored tabs as fresh.
      */
-    fun setAllTabsFresh() {
+    override fun setAllTabsFresh() {
         tabDao.setAllTabsFresh()
     }
 
     /**
      * Update all the stored tabs, removes any tabs not contained in the list and adds the new ones.
      */
-    fun updateAll(favorites: List<Tab>, tabs: List<Tab>) {
+    override fun updateAll(favorites: List<Tab>, tabs: List<Tab>) {
         tabDao.updateAll(favorites, tabs)
     }
 
     /**
      * Update all the stored tabs, removes any tabs not contained in the list and adds the new ones.
      */
-    fun updateAll(tabs: List<Tab>) {
+    override fun updateAll(tabs: List<Tab>) {
         tabDao.updateAll(tabs)
     }
 
@@ -102,7 +102,7 @@ class TabRepository(private val tabDao: TabDao) {
      * Changes are not posted immediately.
      * Do a push() or refresh() to update data on the backend.
      */
-    fun removeFromFavorites(id: String) {
+    override fun removeFromFavorites(id: String) {
         doAsync {
             tabDao.removeFavorite(id)
         }

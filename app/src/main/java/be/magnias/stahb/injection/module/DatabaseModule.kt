@@ -4,7 +4,10 @@ import android.app.Application
 import android.content.Context
 import be.magnias.stahb.persistence.dao.TabDao
 import be.magnias.stahb.persistence.*
+import be.magnias.stahb.service.ITabService
+import be.magnias.stahb.service.IUserService
 import be.magnias.stahb.service.TabService
+import be.magnias.stahb.service.UserService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -18,13 +21,13 @@ class DatabaseModule(private val application: Application) {
 
     @Provides
     @Singleton
-    internal fun provideTabService(): TabService {
+    internal fun provideTabService(): ITabService {
         return TabService()
     }
 
     @Provides
     @Singleton
-    internal fun provideTabRepository(tabDao: TabDao): TabRepository {
+    internal fun provideTabRepository(tabDao: TabDao): ITabRepository {
         return TabRepository(tabDao)
     }
 
@@ -42,8 +45,14 @@ class DatabaseModule(private val application: Application) {
 
     @Provides
     @Singleton
-    internal fun provideUserRepository(): UserRepository {
+    internal fun provideUserRepository(): IUserRepository {
         return UserRepository()
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideUserService(): IUserService {
+        return UserService()
     }
 
     @Provides

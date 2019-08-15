@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
+import be.magnias.stahb.service.ITabService
+import be.magnias.stahb.service.IUserService
 import be.magnias.stahb.service.TabService
 import be.magnias.stahb.service.UserService
 import com.orhanobut.logger.Logger
@@ -23,10 +25,10 @@ import javax.inject.Inject
 class MainViewModel : ViewModel() {
 
     @Inject
-    lateinit var tabService: TabService
+    lateinit var tabService: ITabService
 
     @Inject
-    lateinit var userService: UserService
+    lateinit var userService: IUserService
 
     /**
      * Indicates whether the loading view should be displayed.
@@ -84,7 +86,7 @@ class MainViewModel : ViewModel() {
     fun logout() {
         logoutSubscription.clear()
         logoutSubscription.add(
-            userService.logout().subscribe { t1, t2 ->
+            userService.logout().subscribe { _, _ ->
             }
         )
     }

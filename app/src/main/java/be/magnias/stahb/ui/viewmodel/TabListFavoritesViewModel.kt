@@ -8,6 +8,7 @@ import be.magnias.stahb.App
 import be.magnias.stahb.model.Resource
 import be.magnias.stahb.model.Status
 import be.magnias.stahb.model.Tab
+import be.magnias.stahb.service.ITabService
 import be.magnias.stahb.service.TabService
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,7 +25,7 @@ class TabListFavoritesViewModel : ViewModel()
 {
 
     @Inject
-    lateinit var tabService: TabService
+    lateinit var tabService: ITabService
 
     /**
      * Provides the loaded tabs

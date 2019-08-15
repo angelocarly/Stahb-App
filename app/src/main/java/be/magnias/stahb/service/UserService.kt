@@ -5,6 +5,7 @@ import be.magnias.stahb.error.BadRequestException
 import be.magnias.stahb.error.UnAuthorizedException
 import be.magnias.stahb.model.Token
 import be.magnias.stahb.network.StahbApi
+import be.magnias.stahb.persistence.IUserRepository
 import be.magnias.stahb.persistence.UserRepository
 import com.orhanobut.logger.Logger
 import io.reactivex.Observable
@@ -21,16 +22,16 @@ import javax.inject.Inject
 /**
  * Service to manage the user.
  */
-class UserService {
+class UserService : IUserService {
 
     @Inject
     lateinit var stahbApi: StahbApi
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var userRepository: IUserRepository
 
     @Inject
-    lateinit var tabService: TabService
+    lateinit var tabService: ITabService
 
     /**
      * Subject to notify any listeners for changes in the user state.
@@ -48,18 +49,18 @@ class UserService {
         loggedInSubject.onNext(isUserLoggedIn())
     }
 
-    fun isUserLoggedIn(): Boolean {
+    override fun isUserLoggedIn(): Boolean {
         return userRepository.getUserToken().token != null
     }
 
-    fun getUserLoggedIn(): Subject<Boolean> {
+    override fun getUserLoggedIn(): Subject<Boolean> {
         return loggedInSubject
     }
 
     /**
      * Log the user out
      */
-    fun logout(): Single<Boolean> {
+    override fun logout(): Single<Boolean> {
         return saveLogin(null)
     }
 
@@ -71,7 +72,7 @@ class UserService {
      * @throws UnAuthorizedException on invalid credentials
      * @throws BadRequestException on failed requests
      */
-    fun login(username: String, password: String): Single<Boolean> {
+    override fun login(username: String, password: String): Single<Boolean> {
 
         return Single.create<Boolean> { s ->
             // Execute the call
@@ -107,7 +108,7 @@ class UserService {
      * @return A Single that return true on success
      * @throws BadRequestException on failure
      */
-    fun register(username: String, password: String): Single<Boolean> {
+    override fun register(username: String, password: String): Single<Boolean> {
         return Single.create<Boolean> {
             val res = stahbApi.register(username, password).execute()
 
