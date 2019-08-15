@@ -16,6 +16,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 /**
@@ -33,7 +35,7 @@ class MainViewModel : ViewModel() {
     /**
      * Indicates whether the loading view should be displayed.
      */
-    private val refreshLoadingVisibility = MutableLiveData<Resource<Boolean>>()
+    private val refreshLoadingVisibility = PublishSubject.create<Resource<Boolean>>()
 
     /**
      * Disposable to dispose of requests
@@ -53,7 +55,7 @@ class MainViewModel : ViewModel() {
     /**
      * @return a livedata object which shows when the data is loaded or an error occurred.
      */
-    fun getRefreshLoadingVisibility(): LiveData<Resource<Boolean>> {
+    fun getRefreshLoadingVisibility(): Subject<Resource<Boolean>> {
         return refreshLoadingVisibility
     }
 
@@ -67,13 +69,13 @@ class MainViewModel : ViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnTerminate {
-                    refreshLoadingVisibility.value = Resource(Status.SUCCESS, true, null)
+                    refreshLoadingVisibility.onNext(Resource(Status.SUCCESS, true, null))
                     Logger.d("Refreshed tabs")
                 }
                 .subscribe(
                     { },
                     { error ->
-                        refreshLoadingVisibility.value = Resource(Status.ERROR, true, error.message)
+                        refreshLoadingVisibility.onNext(Resource(Status.ERROR, true, error.message))
                         Logger.e(error.message!!)
                     }
                 )

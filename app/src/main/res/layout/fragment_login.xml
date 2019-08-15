@@ -1,86 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.fragment.LoginFragment">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:maxWidth="500dp"
+android:layout_gravity="center">
 
-    <LinearLayout
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            tools:context=".ui.fragment.LoginFragment"
+            android:visibility="visible"
+            android:gravity="center"
+            android:layout_gravity="center">
 
-        <TextView
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:visibility="gone"
-                tools:visibility="visible"
-                tools:text="Error"
-                android:id="@+id/text_view_error"/>
-
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                                                               android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:layout_marginTop="10dp"
-                    android:hint="Username"
-                    android:ems="10"
-                    android:id="@+id/textinput_username"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                                                               android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:layout_marginTop="10dp"
-                    android:ems="10"
-                    android:id="@+id/textinput_password"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <!-- Loading screen -->
-        <RelativeLayout
-                android:id="@+id/loading_panel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:maxWidth="300dp"
                 android:gravity="center"
-                android:visibility="gone">
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
 
-            <ProgressBar
-                    android:layout_width="wrap_content"
+            <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:indeterminate="true"
-            />
-        </RelativeLayout>
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="Error"
+                    android:id="@+id/text_view_error"
+                    android:layout_marginBottom="10dp"/>
 
-        <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_login"
-                android:text="Login"
-                android:clickable="true"/>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textinput_username_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:layout_marginTop="10dp"
+                        android:hint="Username"
+                        android:ems="10"
+                        android:id="@+id/textinput_username"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textinput_password_layout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:ems="10"
+                        android:id="@+id/textinput_password"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-        <TextView
-                android:text="No account yet? Click here to register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:clickable="true"
-                android:focusable="true"
-                android:id="@+id/button_register"/>
+            <!-- Loading screen -->
+            <LinearLayout
+                    android:id="@+id/login_element"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
 
-    </LinearLayout>
+                <ProgressBar
+                        android:id="@+id/loading_panel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        android:visibility="gone"
+                />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/button_login"
+                        android:visibility="visible"
+                        android:text="Login"
+                        android:clickable="true"/>
+            </LinearLayout>
+
+            <TextView
+                    android:text="No account yet? Create one"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:id="@+id/button_register"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

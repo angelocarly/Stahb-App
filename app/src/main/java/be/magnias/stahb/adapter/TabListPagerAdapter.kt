@@ -26,7 +26,7 @@ class TabListPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
     override fun getPageTitle(position: Int): CharSequence {
         // Show the heading 'New' at index 0
-        if (position == 0) return "New"
+        if (position == 0) return "All"
         // Show the heading 'Favorites' at index 1
         else return "Favorites"
     }
