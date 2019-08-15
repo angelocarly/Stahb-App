@@ -1,5 +1,6 @@
 package be.magnias.stahb.ui.fragment
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -10,6 +11,7 @@ import be.magnias.stahb.R
 import be.magnias.stahb.adapter.TabListPagerAdapter
 import be.magnias.stahb.ui.MainActivity
 import be.magnias.stahb.ui.viewmodel.TabOverviewViewModel
+import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_tab_overview.*
 import kotlinx.android.synthetic.main.fragment_tab_overview.view.*
 
@@ -68,6 +70,12 @@ class TabOverviewFragment : Fragment() {
             // Show the logout option
             view.toolbar.menu.setGroupVisible(R.id.group_loggedIn, false)
             view.toolbar.menu.setGroupVisible(R.id.group_loggedOut, true)
+        }
+
+        // Dont show details pane in tablet portrait mode
+        if(resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            view.details_pane?.visibility = View.GONE
+            Logger.d("INVIDISDAFIBLE")
         }
 
         return view

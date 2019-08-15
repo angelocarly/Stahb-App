@@ -1,6 +1,8 @@
 package be.magnias.stahb.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -14,11 +16,14 @@ import be.magnias.stahb.ui.fragment.TabOverviewFragment
 import be.magnias.stahb.ui.viewmodel.MainViewModel
 import com.orhanobut.logger.Logger
 import io.reactivex.disposables.Disposable
+import be.magnias.stahb.R.id.details_pane as details_pane1
 
 /**
  * The Main Activity of the application.
  */
 class MainActivity : AppCompatActivity() {
+
+    private var isTwoPane: Boolean = false
 
     private lateinit var viewModel: MainViewModel
 
@@ -30,6 +35,12 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize viewModel
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+        if (resources.getBoolean(R.bool.isTablet)) {
+            if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                isTwoPane = true
+            }
+        }
 
         // Set the TabOverviewFragment as content
         if (savedInstanceState == null) {
@@ -59,12 +70,21 @@ class MainActivity : AppCompatActivity() {
      * @param id The id of the requested Tab.
      */
     fun showTab(id: String) {
-        val fragment = TabFragment.newInstance(id)
-        supportFragmentManager
-            .beginTransaction()
-            .addToBackStack("tab")
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+        if(isTwoPane) {
+            val fragment = TabFragment.newInstance(id)
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.details_pane, fragment)
+                .commit()
+        }
+        else {
+            val fragment = TabFragment.newInstance(id)
+            supportFragmentManager
+                .beginTransaction()
+                .addToBackStack("tab")
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        }
     }
 
     /**

@@ -41,11 +41,11 @@ class TabFragment : Fragment() {
         tabViewModel.getLoadingVisibility().observe(this, Observer {loadingVisible ->
             if(loadingVisible) {
                 loading_panel.visibility = View.VISIBLE
-                checkbox_favorite.visibility = View.GONE
+                toolbar.visibility = View.GONE
             }
             else {
                 loading_panel.visibility = View.GONE
-                checkbox_favorite.visibility = View.VISIBLE
+                toolbar.visibility = View.VISIBLE
             }
         })
 

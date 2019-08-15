@@ -1,87 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.LoginFragment">
+        android:maxWidth="500dp"
+android:layout_gravity="center_horizontal">
 
-    <LinearLayout
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+    >
 
-        <TextView
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:visibility="gone"
-                tools:visibility="visible"
-                tools:text="Error"
-                android:id="@+id/text_view_error"/>
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
 
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                                                               android:layout_height="wrap_content">
-            <EditText
+            <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:layout_marginTop="10dp"
-                    android:hint="Username"
-                    android:ems="10"
-                    android:id="@+id/textinput_username"/>
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="Error"
+                    android:id="@+id/text_view_error"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                                   android:layout_height="wrap_content">
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:layout_marginTop="10dp"
+                        android:hint="Username"
+                        android:ems="10"
+                        android:id="@+id/textinput_username"/>
 
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                                                               android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                                   android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Password"
+                        android:inputType="textPassword"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:id="@+id/textinput_password"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                                                                   android:layout_height="wrap_content"
+                                                                   android:layout_marginBottom="20dp">
+                <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Repeat Password"
+                        android:inputType="textPassword"
+                        android:layout_marginTop="10dp"
+                        android:ems="10"
+                        android:id="@+id/textinput_repeatpassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Loading screen -->
+            <RelativeLayout
+                    android:id="@+id/loading_panel"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                />
+            </RelativeLayout>
+
+            <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:layout_marginTop="10dp"
-                    android:ems="10"
-                    android:id="@+id/textinput_password"/>
+                    android:id="@+id/button_register"
+                    android:text="Register"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
-                                                               android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Repeat Password"
-                    android:inputType="textPassword"
-                    android:layout_marginTop="10dp"
-                    android:ems="10"
-                    android:id="@+id/textinput_repeatpassword"/>
+    </ScrollView>
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Loading screen -->
-        <RelativeLayout
-                android:id="@+id/loading_panel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:visibility="gone">
-
-            <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-            />
-        </RelativeLayout>
-
-        <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_register"
-                android:text="Register"/>
-
-    </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
