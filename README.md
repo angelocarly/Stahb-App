@@ -1,6 +1,6 @@
-# Herexamen-Native-Apps-1
+# Stahb
 
-Herexamen voor het vak Native Apps 1
+Examen voor het vak Native Apps 1
 
 ## Applicatie
 
